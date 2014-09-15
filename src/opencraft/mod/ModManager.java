@@ -17,5 +17,7 @@ package opencraft.mod;
 
 public class ModManager {
 	
-	
+	public ModManager() {
+		
+	}
 }
