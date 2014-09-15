@@ -62,6 +62,13 @@ public class EntityChunk extends Entity implements ITickable {
 		this.address = address;
 	}
 	
+	public IntXYZ getBlockCoord(IntXYZ chunkCoord) {
+		int x = this.address.x * 32 + chunkCoord.x;
+		int y = this.address.y * 32 + chunkCoord.y;
+		int z = this.address.z * 32 + chunkCoord.z;
+		return new IntXYZ(x, y, z);
+	}
+	
 	public IBlock getBlock(IntXYZ coord) {
 		if (coord.x < 0 || coord.y < 0 || coord.z < 0 || coord.x >= 32 || coord.y >= 32 || coord.z >= 32) return null;
 		char symbol = this.block[coord.x][coord.y][coord.z];
@@ -72,7 +79,7 @@ public class EntityChunk extends Entity implements ITickable {
 		if (coord.x < 0 || coord.y < 0 || coord.z < 0 || coord.x >= 32 || coord.y >= 32 || coord.z >= 32) return false;
 		
 		IBlock oldBlock = getBlock(coord);
-		EventBlockChanged event = (EventBlockChanged) event().emit(new EventBlockChanged(oldBlock, block));
+		EventBlockChanged event = (EventBlockChanged) event().emit(new EventBlockChanged(getBlockCoord(coord), oldBlock, block));
 		block = event.newBlock;
 		
 		char symbol = Block.registry.getCode(block);

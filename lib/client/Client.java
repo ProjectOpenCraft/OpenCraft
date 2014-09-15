@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.net.Socket;
 
 import opencraft.lib.INamed;
-import opencraft.lib.entity.Entity;
 import opencraft.lib.event.packet.PacketReceiver;
 import opencraft.lib.event.packet.PacketSender;
 import opencraft.world.object.living.player.Player;
@@ -39,7 +38,7 @@ public class Client implements INamed {
 		this.socket = soc;
 		this.manager = manager;
 		try {
-			this.receiver = new PacketReceiver(Entity.registry, socket.getInputStream());
+			this.receiver = new PacketReceiver(socket.getInputStream());
 			this.sender = new PacketSender(socket.getOutputStream());
 			
 			
