@@ -7,16 +7,22 @@
  * 
  * ------------------------------------------------------------------------------
  * 
- * class EventOnChunkUnload
+ * class EventDecorateChunk
  * 
  * author - Moonrise1275
  * All rights reserved.
  */
 
-package opencraft.event.world.chunk;
+package opencraft.event.world;
 
 import opencraft.lib.event.IEvent;
+import opencraft.world.chunk.EntityChunk;
 
-public class EventOnChunkUnload implements IEvent {
-
+public class EventDecorateChunk implements IEvent {
+	
+	public EntityChunk chunk;
+	
+	public EventDecorateChunk(EntityChunk chunk) {
+		this.chunk = chunk;
+	}
 }

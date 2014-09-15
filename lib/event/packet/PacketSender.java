@@ -40,6 +40,7 @@ public class PacketSender extends EventDispatcher {
 		if (event instanceof Packet) {
 			String data = ((Packet) event).toJSON(new JSONObject()).toJSONString();
 			try {
+				data = new StringBuffer("pac").append(data).append("ket").toString();
 				w.write(data);
 				w.flush();
 			} catch (IOException e) {

@@ -50,7 +50,19 @@ public class PacketReceiver extends EventDispatcher {
 		public void run() {
 			while (r != null) {
 				try {
-					JSONObject json = (JSONObject) parser.parse(r.readLine());
+					StringBuilder sb = new StringBuilder();
+					
+					String pac;
+					if ((pac = r.readLine()).startsWith("pac")) {
+						sb.append(pac);
+						String stack;
+						do {
+							stack = r.readLine();
+							sb.append(stack);
+						} while (!stack.endsWith("ket"));
+					}
+					
+					JSONObject json = (JSONObject) parser.parse(sb.toString());
 					Packet packet = (Packet) registry.getEntity(json);
 					
 					pr.emit(packet);
