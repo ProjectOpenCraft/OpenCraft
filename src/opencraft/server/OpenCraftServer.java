@@ -17,6 +17,7 @@ package opencraft.server;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -52,17 +53,19 @@ public class OpenCraftServer {
 				props.setProperty("port", "39372");
 				props.setProperty("tick_threads", "100");
 				props.setProperty("tick_time_ms", "50");
+				props.store(new FileOutputStream(propsF), "");
 			}
 			
 			this.clientManager = new ClientManager(Integer.parseInt(props.getProperty("port")));
 			this.worldManager = new WorldManager();
 			this.tickManager = new TickManager(Integer.parseInt(props.getProperty("tick_threads")), Integer.parseInt(props.getProperty("tick_time_ms")));
-			
-			
+			this.modManager = new ModManager();
 			
 			
 			
 		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (NumberFormatException e) {
 			e.printStackTrace();
 		}
 	}

@@ -6,12 +6,15 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Collection;
+
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
 import opencraft.OpenCraft;
-import opencraft.event.world.chunk.EventOnChunkLoad;
-import opencraft.event.world.chunk.EventOnChunkUnload;
+import opencraft.event.world.EventDecorateChunk;
+import opencraft.event.world.EventGenerateChunk;
+import opencraft.event.world.chunk.EventLoadChunk;
+import opencraft.event.world.chunk.EventUnloadChunk;
 import opencraft.lib.entity.Entity;
 import opencraft.lib.entity.IEntity;
 import opencraft.lib.entity.data.IntXYZ;
@@ -38,6 +41,10 @@ public class ChunkManager implements ITickable {
 	public void loadChunk(EntityChunk chunk) {
 		this.loadingChunkAddresses.add(chunk);
 	}
+	
+	public EntityChunk getChunk(IntXYZ address) {
+		return (EntityChunk) this.chunks.get(address);
+	}
 
 	@Override
 	public void tick() {
@@ -51,25 +58,28 @@ public class ChunkManager implements ITickable {
 		
 		for (IEntity oldChunk : oldChunks) {
 			EntityChunk chunk = (EntityChunk) this.chunks.get(oldChunk);
-			chunk.event().emit(new EventOnChunkUnload());
+			chunk.event().emit(new EventUnloadChunk());
 			OpenCraftServer.instance().getTickManager().removeTick(chunk);
 			try {
-				EntityLoader.saveEntity(chunk, new File(worldDir, chunk.coord.toString()));
+				EntityLoader.saveEntity(chunk, new File(worldDir, chunk.address.toString()));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 			this.chunks.removeValue(chunk);
 		}
 		for (IEntity newChunk : newChunks) {
+			EntityChunk chunk;
 			try {
 				JSONObject json = (JSONObject) JSONValue.parse(new BufferedReader(new FileReader(new File(worldDir, ((IntXYZ)newChunk).toString()))));
-				EntityChunk chunk = (EntityChunk) Entity.registry.getEntity(json);
-				this.chunks.put(chunk.coord, chunk);
-				OpenCraftServer.instance().getTickManager().addTick(chunk);
-				chunk.event().emit(new EventOnChunkLoad());
+				chunk = (EntityChunk) Entity.registry.getEntity(json);
 			} catch (FileNotFoundException e) {
-				e.printStackTrace();
+				EventGenerateChunk event1 = (EventGenerateChunk) world.event().emit(new EventGenerateChunk(new EntityChunk(this.world.getName(), (IntXYZ)newChunk)));
+				EventDecorateChunk event2 = (EventDecorateChunk) world.event().emit(new EventDecorateChunk(event1.chunk));
+				chunk = event2.chunk;
 			}
+			this.chunks.put(chunk.address, chunk);
+			OpenCraftServer.instance().getTickManager().addTick(chunk);
+			chunk.event().emit(new EventLoadChunk());
 		}
 		
 		this.loadedChunkAddresses = loadingChunkAddressesCopy;

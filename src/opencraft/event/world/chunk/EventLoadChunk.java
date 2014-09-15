@@ -17,7 +17,7 @@ package opencraft.event.world.chunk;
 
 import opencraft.lib.event.IEvent;
 
-public class EventOnChunkLoad implements IEvent {
+public class EventLoadChunk implements IEvent {
 	
 	
 }

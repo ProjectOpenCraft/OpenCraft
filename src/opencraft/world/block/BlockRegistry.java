@@ -56,6 +56,11 @@ public class BlockRegistry extends Entity {
 		return this.blockMap.get(this.charMap.get(symbol));
 	}
 	
+	public char getCode(IBlock block) {
+		String id = block.getId();
+		return this.revCharMap.get(id);
+	}
+	
 	@Override
 	@SuppressWarnings("unchecked")
 	public JSONObject toJSON(JSONObject json) {
