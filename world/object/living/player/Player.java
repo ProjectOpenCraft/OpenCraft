@@ -19,9 +19,10 @@ import org.json.simple.JSONObject;
 
 import opencraft.event.object.living.EventOnAttack;
 import opencraft.item.EntityItem;
-import opencraft.lib.client.ClientInfo;
 import opencraft.lib.entity.Entity;
 import opencraft.lib.entity.IEntity;
+import opencraft.server.client.Client;
+import opencraft.server.client.ClientInfo;
 import opencraft.world.block.IBlockInteractor;
 import opencraft.world.object.IObjectInteractor;
 import opencraft.world.object.living.EntityObjectLiving;
@@ -30,6 +31,7 @@ import opencraft.world.object.living.IAttacker;
 public class Player extends EntityObjectLiving implements IBlockInteractor, IObjectInteractor, IAttacker {
 	
 	private ClientInfo info;
+	private Client client;
 	
 	public Player() {
 		this.info = null;
@@ -66,6 +68,14 @@ public class Player extends EntityObjectLiving implements IBlockInteractor, IObj
 		this.info = (ClientInfo) Entity.registry.getEntity((JSONObject) json.get("info"));
 		return this;
 	}
+	
+	public Client getClient() {
+		return this.client;
+	}
+	
+	public void setClient(Client c) {
+		this.client = c;
+	}
 
 	@Override
 	public int getAttackDamage(EntityObjectLiving target, EntityItem weapon) {
@@ -76,5 +86,10 @@ public class Player extends EntityObjectLiving implements IBlockInteractor, IObj
 	@Override
 	public void tick() {
 		
+	}
+
+	@Override
+	public String getId() {
+		return "object|OpenCraft|player";
 	}
 }

@@ -13,7 +13,7 @@
  * All rights reserved.
  */
 
-package opencraft.lib.client;
+package opencraft.server.client;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -26,7 +26,7 @@ import opencraft.lib.entity.IEntity;
 import opencraft.lib.entity.storage.EntityStorageList;
 import opencraft.lib.event.IEvent;
 import opencraft.lib.event.IEventListener;
-import opencraft.packet.PacketClientInfo;
+import opencraft.packet.c2s.PacketClientInfo;
 import opencraft.world.object.living.player.Player;
 
 public class ClientManager extends Thread {

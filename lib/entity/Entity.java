@@ -28,18 +28,12 @@ public abstract class Entity implements IEntity {
 	
 	public static IEntityRegistry registry = new EntityRegistry();
 	
-	public static String ENTITY_ID = "entity|OpenCraft|entity";
 	private IEventDispatcher ed = new EventDispatcher();
 	private Map<Class<? extends IEntity>, IEntity> mapSubEntity = Collections.synchronizedMap(new HashMap<Class<? extends IEntity>, IEntity>());
 	
 	@Override
 	public IEventDispatcher event() {
 		return ed;
-	}
-	
-	@Override
-	public String getId() {
-		return ENTITY_ID;
 	}
 	
 	@Override

@@ -7,47 +7,47 @@
  * 
  * ------------------------------------------------------------------------------
  * 
- * class PacketClientInfo
+ * class PacketFullChunk
  * 
  * author - Moonrise1275
  * All rights reserved.
  */
 
-package opencraft.packet;
+package opencraft.packet.s2c;
 
 import org.json.simple.JSONObject;
 
-import opencraft.lib.client.ClientInfo;
 import opencraft.lib.entity.IEntity;
 import opencraft.lib.event.packet.Packet;
 
-public class PacketClientInfo extends Packet {
-	
-	static {
-		ENTITY_ID = "packet|OpenCraft|ClientInfo";
-	}
-	
-	public final ClientInfo info;
-	
-	public PacketClientInfo() {
-		this.info = null;
-	}
-	
-	public PacketClientInfo(ClientInfo i) {
-		this.info = i;
-	}
-	
+public class PacketFullChunk extends Packet {
+
 	@Override
+	public String getId() {
+		return "packet|OpenCraft|fullChunk";
+	}
+	
+	public final String blocks;
+	
+	public PacketFullChunk() {
+		this.blocks = null;
+	}
+	
+	public PacketFullChunk(String blks) {
+		this.blocks = blks;
+	}
+	
 	@SuppressWarnings("unchecked")
+	@Override
 	public JSONObject toJSON(JSONObject json) {
 		super.toJSON(json);
-		json.put("info", this.info.toJSON(new JSONObject()));
+		json.put("blocks", blocks);
 		return json;
 	}
 	
 	@Override
 	public IEntity fromJSON(JSONObject json) {
 		super.fromJSON(json);
-		return new PacketClientInfo((ClientInfo) new ClientInfo().fromJSON((JSONObject) json.get("info")));
+		return new PacketFullChunk((String) json.get("blocks"));
 	}
 }

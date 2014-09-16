@@ -20,9 +20,6 @@ import opencraft.lib.entity.Entity;
 
 public abstract class EntityItem extends Entity implements INamed {
 	
-	static {
-		ENTITY_ID = "item|OpenCraft|base";
-	}
 	
 	public abstract int getDamage();
 }

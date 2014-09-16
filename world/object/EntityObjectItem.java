@@ -24,10 +24,6 @@ import opencraft.lib.entity.IEntity;
 
 public class EntityObjectItem extends EntityObject {
 	
-	static {
-		ENTITY_ID = "object|OpenCraft|item";
-	}
-	
 	private int lifeTime;
 	
 	public final EntityItem item;
@@ -77,5 +73,10 @@ public class EntityObjectItem extends EntityObject {
 				
 			}
 		}
+	}
+
+	@Override
+	public String getId() {
+		return "object|OpenCraft|item";
 	}
 }

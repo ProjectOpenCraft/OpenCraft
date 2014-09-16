@@ -20,7 +20,4 @@ import opencraft.lib.event.IEvent;
 
 public abstract class Packet extends Entity implements IEvent {
 	
-	static {
-		ENTITY_ID = "packet|OpenCraft|base";
-	}
 }

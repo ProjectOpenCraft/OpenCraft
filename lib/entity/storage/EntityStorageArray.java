@@ -120,4 +120,9 @@ public class EntityStorageArray extends EntityStorage {
 		}
 		return this;
 	}
+
+	@Override
+	public String getId() {
+		return "entityStorage|OpenCraft|array";
+	}
 }

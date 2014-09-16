@@ -21,10 +21,6 @@ import opencraft.lib.entity.Entity;
 
 public abstract class EntityStorage extends Entity implements IEntityStorage {
 	
-	static {
-		ENTITY_ID = "entitystorage|OpenCraft|base";
-	}
-	
 	@Override
 	public IEntityStorage copy() {
 		JSONObject json = this.toJSON(new JSONObject());

@@ -25,4 +25,6 @@ public interface IBlock extends INamed {
 	 */
 	String getId();
 	void onChunkTick(EntityWorld world, int x, int y, int z);
+	boolean isFullCube();
+	
 }

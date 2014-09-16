@@ -22,9 +22,6 @@ import opencraft.lib.entity.IEntity;
 
 public class IntXYZ extends Entity {
 	
-	static {
-		ENTITY_ID = "data|OpenCraft|IntXYZ";
-	}
 	
 	public final int x, y, z;
 	
@@ -97,5 +94,10 @@ public class IntXYZ extends Entity {
 	public IEntity fromJSON(JSONObject json) {
 		super.fromJSON(json);
 		return new IntXYZ(json);
+	}
+
+	@Override
+	public String getId() {
+		return "data|OpenCraft|intXYZ";
 	}
 }

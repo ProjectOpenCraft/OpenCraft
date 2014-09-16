@@ -22,9 +22,9 @@ import java.io.IOException;
 import java.util.Properties;
 
 import opencraft.OpenCraft;
-import opencraft.lib.client.ClientManager;
 import opencraft.lib.tick.TickManager;
 import opencraft.mod.ModManager;
+import opencraft.server.client.ClientManager;
 import opencraft.world.WorldManager;
 
 public class OpenCraftServer {

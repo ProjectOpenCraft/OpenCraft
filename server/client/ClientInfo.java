@@ -13,7 +13,7 @@
  * All rights reserved.
  */
 
-package opencraft.lib.client;
+package opencraft.server.client;
 
 import org.json.simple.JSONObject;
 
@@ -22,9 +22,6 @@ import opencraft.lib.entity.IEntity;
 
 public class ClientInfo extends Entity {
 	
-	static {
-		ENTITY_ID = "client|OpenCraft|info";
-	}
 	
 	public String name;
 	public String skinAddress;
@@ -60,5 +57,10 @@ public class ClientInfo extends Entity {
 	public IEntity fromJSON(JSONObject json) {
 		super.fromJSON(json);
 		return new ClientInfo((String)json.get("name"), (String)json.get("skin"), (String)json.get("id"), (String)json.get("secret"));
+	}
+
+	@Override
+	public String getId() {
+		return "client|OpenCraft|info";
 	}
 }

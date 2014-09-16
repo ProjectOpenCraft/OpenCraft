@@ -28,10 +28,6 @@ import opencraft.lib.entity.IEntity;
 
 public class EntityStorageList extends EntityStorage {
 	
-	static {
-		ENTITY_ID = "entitystorage|OpenCraft|List";
-	}
-	
 	private List<IEntity> listEntity;
 	
 	public EntityStorageList() {
@@ -108,5 +104,10 @@ public class EntityStorageList extends EntityStorage {
 			this.listEntity.add(ntt);
 		}
 		return this;
+	}
+
+	@Override
+	public String getId() {
+		return "entityStorage|OpenCraft|list";
 	}
 }

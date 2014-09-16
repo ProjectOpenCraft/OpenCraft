@@ -23,9 +23,6 @@ import opencraft.lib.entity.IEntity;
 
 public class Box extends Entity {
 	
-	static {
-		ENTITY_ID = "data|OpenCraft|Box";
-	}
 	
 	public final double mX, mY, mZ, MX, MY, MZ;
 	

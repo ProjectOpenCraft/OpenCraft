@@ -22,9 +22,6 @@ import org.json.simple.JSONObject;
 
 public class DoubleXYZ extends Entity {
 	
-	static {
-		ENTITY_ID = "data|OpenCraft|DoubleXYZ";
-	}
 	
 	public final double x, y, z;
 	
@@ -97,5 +94,10 @@ public class DoubleXYZ extends Entity {
 	public IEntity fromJSON(JSONObject json) {
 		super.fromJSON(json);
 		return new DoubleXYZ(json);
+	}
+
+	@Override
+	public String getId() {
+		return "data|OpenCraft|doubleXYZ";
 	}
 }

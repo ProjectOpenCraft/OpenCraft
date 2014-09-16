@@ -26,10 +26,6 @@ import opencraft.world.EntityWorld;
 
 public abstract class EntityObject extends Entity implements ITickable, INamed {
 	
-	static {
-		ENTITY_ID = "object|OpenCraft|base";
-	}
-	
 	protected EntityWorld world;
 	protected DoubleXYZ coord;
 	

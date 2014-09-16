@@ -28,10 +28,6 @@ import org.json.simple.JSONObject;
 
 public class EntityStorageIntXYZ extends EntityStorage {
 	
-	static {
-		ENTITY_ID = "entitystorage|OpenCraft|IntXYZ";
-	}
-	
 	Map<IntXYZ, IEntity> mapEntity;
 	
 	public EntityStorageIntXYZ() {
@@ -94,6 +90,11 @@ public class EntityStorageIntXYZ extends EntityStorage {
 			}
 		}
 		return false;
+	}
+
+	@Override
+	public String getId() {
+		return "entityStorage|OpenCraft|intXYZ";
 	}
 
 }

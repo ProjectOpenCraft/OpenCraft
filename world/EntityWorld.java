@@ -26,9 +26,6 @@ import opencraft.world.chunk.EntityChunk;
 
 public abstract class EntityWorld extends Entity implements ITickable, INamed {
 	
-	static {
-		ENTITY_ID = "world|OpenCraft|base";
-	}
 	public ChunkManager chunkManager = new ChunkManager(this);
 	
 	public EntityWorld() {

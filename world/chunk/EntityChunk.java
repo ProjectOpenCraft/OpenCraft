@@ -40,10 +40,6 @@ import opencraft.world.object.EntityObject;
 
 public class EntityChunk extends Entity implements ITickable {
 	
-	static {
-		ENTITY_ID = "world|OpenCraft|entityChunk";
-	}
-	
 	String world = "";
 	IntXYZ address = new IntXYZ((JSONObject)null);
 	char[][][] block = new char[32][32][32];
@@ -218,5 +214,10 @@ public class EntityChunk extends Entity implements ITickable {
 			return event;
 		}
 		
+	}
+
+	@Override
+	public String getId() {
+		return "world|OpenCraft|chunk";
 	}
 }

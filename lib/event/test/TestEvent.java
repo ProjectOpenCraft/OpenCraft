@@ -83,10 +83,6 @@ public class TestEvent{
 	
 	public static class EventPerson extends Packet {
 		
-		static {
-			ENTITY_ID = "packet|test|EventPerson";
-		}
-		
 		public String name;
 		public long age;
 		
@@ -117,6 +113,11 @@ public class TestEvent{
 			this.age = (long) json.get("age");
 			
 			return this;
+		}
+
+		@Override
+		public String getId() {
+			return "packet|testOpenCraft|person";
 		}
 	}
 }

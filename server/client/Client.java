@@ -13,14 +13,18 @@
  * All rights reserved.
  */
 
-package opencraft.lib.client;
+package opencraft.server.client;
 
 import java.io.IOException;
 import java.net.Socket;
 
 import opencraft.lib.INamed;
+import opencraft.lib.event.IEvent;
+import opencraft.lib.event.IEventListener;
 import opencraft.lib.event.packet.PacketReceiver;
 import opencraft.lib.event.packet.PacketSender;
+import opencraft.packet.c2s.PacketKeyInput;
+import opencraft.packet.c2s.PacketPlayerSight;
 import opencraft.world.object.living.player.Player;
 
 public class Client implements INamed {
@@ -51,6 +55,11 @@ public class Client implements INamed {
 	
 	void join() {
 		this.player = manager.getPlayer(info.clientId, info.clientSecret);
+		if (this.player == null) return;
+		player.setClient(this);
+		
+		this.receiver.addListener(new KeyInputListener(player));
+		this.receiver.addListener(new PlayerSightListener(player));
 	}
 	
 	public PacketReceiver receiver() {
@@ -71,5 +80,45 @@ public class Client implements INamed {
 	
 	String getSkin() {
 		return info.skinAddress;
+	}
+	
+	class KeyInputListener implements IEventListener {
+		
+		Player player;
+		
+		public KeyInputListener(Player p) {
+			this.player = p;
+		}
+
+		@Override
+		public Class<? extends IEvent> getEventClass() {
+			return PacketKeyInput.class;
+		}
+
+		@Override
+		public IEvent handleEvent(IEvent event) {
+			player.event().emit(event);
+			return event;
+		}
+	}
+	
+class PlayerSightListener implements IEventListener {
+		
+		Player player;
+		
+		public PlayerSightListener(Player p) {
+			this.player = p;
+		}
+
+		@Override
+		public Class<? extends IEvent> getEventClass() {
+			return PacketPlayerSight.class;
+		}
+
+		@Override
+		public IEvent handleEvent(IEvent event) {
+			player.event().emit(event);
+			return event;
+		}
 	}
 }
