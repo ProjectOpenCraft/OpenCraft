@@ -85,8 +85,6 @@ public class TickManager implements ICallable {
 
 	@Override
 	public synchronized void call() {
-		try {
-			wait();
-		} catch (InterruptedException e) {}
+		doneWork();
 	}
 }
