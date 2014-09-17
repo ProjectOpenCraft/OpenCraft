@@ -15,6 +15,7 @@
 
 package opencraft.server.client;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.Socket;
 
@@ -23,6 +24,8 @@ import opencraft.lib.event.IEvent;
 import opencraft.lib.event.IEventListener;
 import opencraft.lib.event.packet.PacketReceiver;
 import opencraft.lib.event.packet.PacketSender;
+import opencraft.packet.PacketFileEnd;
+import opencraft.packet.PacketFileStart;
 import opencraft.packet.c2s.PacketKeyInput;
 import opencraft.packet.c2s.PacketPlayerSight;
 import opencraft.world.object.living.player.Player;
@@ -60,6 +63,16 @@ public class Client implements INamed {
 		
 		this.receiver.addListener(new KeyInputListener(player));
 		this.receiver.addListener(new PlayerSightListener(player));
+	}
+	
+	public static void sendFile(PacketSender sender, File file, String path) {
+		if (!file.exists() || sender == null) return;
+		long length = file.length();
+		sender.emit(new PacketFileStart(path, length));
+		
+		//TODO send mod's assets by nio
+		
+		sender.emit(new PacketFileEnd(path));
 	}
 	
 	public PacketReceiver receiver() {

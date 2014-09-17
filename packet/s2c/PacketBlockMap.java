@@ -18,7 +18,6 @@ package opencraft.packet.s2c;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import opencraft.lib.entity.IEntity;

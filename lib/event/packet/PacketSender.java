@@ -27,9 +27,11 @@ import opencraft.lib.event.IEvent;
 
 public class PacketSender extends EventDispatcher {
 	
+	public OutputStream out;
 	BufferedWriter w;
 	
 	public PacketSender(OutputStream output) {
+		this.out = output;
 		this.w = new BufferedWriter(new OutputStreamWriter(output));
 	}
 	

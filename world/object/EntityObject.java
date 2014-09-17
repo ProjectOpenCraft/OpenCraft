@@ -15,6 +15,8 @@
 
 package opencraft.world.object;
 
+import java.util.UUID;
+
 import org.json.simple.JSONObject;
 
 import opencraft.lib.INamed;
@@ -23,11 +25,25 @@ import opencraft.lib.entity.IEntity;
 import opencraft.lib.entity.data.DoubleXYZ;
 import opencraft.lib.tick.ITickable;
 import opencraft.world.EntityWorld;
+import opencraft.world.object.render.ObjectRenderInfo;
 
 public abstract class EntityObject extends Entity implements ITickable, INamed {
 	
 	protected EntityWorld world;
 	protected DoubleXYZ coord;
+	public final String uuid;
+	
+	public EntityObject() {
+		this.uuid = UUID.randomUUID().toString();
+		this.world = null;
+		this.coord = null;
+	}
+	
+	public String getUUID() {
+		return this.uuid;
+	}
+	
+	public abstract ObjectRenderInfo getRenderInfo();
 	
 	@SuppressWarnings("unchecked")
 	@Override

@@ -17,11 +17,8 @@ package opencraft.mod;
 
 import opencraft.lib.event.EventDispatcher;
 import opencraft.lib.event.IEventDispatcher;
-import opencraft.lib.event.IEventHandler;
 
-public abstract class Mod implements IEventHandler {
-	
-	
+public abstract class Mod implements IMod {
 	
 	private IEventDispatcher ed = new EventDispatcher();
 

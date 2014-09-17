@@ -24,11 +24,10 @@ import opencraft.lib.entity.IEntity;
 import opencraft.server.client.Client;
 import opencraft.server.client.ClientInfo;
 import opencraft.world.block.IBlockInteractor;
-import opencraft.world.object.IObjectInteractor;
 import opencraft.world.object.living.EntityObjectLiving;
 import opencraft.world.object.living.IAttacker;
 
-public class Player extends EntityObjectLiving implements IBlockInteractor, IObjectInteractor, IAttacker {
+public class Player extends EntityObjectLiving implements IBlockInteractor, IAttacker {
 	
 	private ClientInfo info;
 	private Client client;
