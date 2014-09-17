@@ -22,10 +22,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import opencraft.event.object.living.player.EventPlayerPartWorld;
 import opencraft.lib.entity.IEntity;
 import opencraft.lib.entity.storage.EntityStorageList;
 import opencraft.lib.event.IEvent;
 import opencraft.lib.event.IEventListener;
+import opencraft.lib.event.packet.Packet;
 import opencraft.packet.c2s.PacketClientInfo;
 import opencraft.world.object.living.player.Player;
 
@@ -53,6 +55,12 @@ public class ClientManager extends Thread {
 		return null;
 	}
 	
+	public void sendToAll(Packet packet) {
+		for (Client client : mapClient.values()) {
+			client.sender.emit(packet);
+		}
+	}
+	
 	public void run() {
 		try {
 			ServerSocket ss = new ServerSocket(port);
@@ -68,6 +76,7 @@ public class ClientManager extends Thread {
 	}
 	
 	void removeClient(Client client) {
+		client.player.event().emit(new EventPlayerPartWorld(client.player.getWorld()));
 		this.clientPool.remove(client);
 		this.mapClient.remove(client.getName());
 	}

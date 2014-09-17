@@ -32,6 +32,7 @@ import opencraft.lib.event.IEvent;
 import opencraft.lib.event.IEventListener;
 import opencraft.lib.tick.ITickable;
 import opencraft.lib.tick.TickManager;
+import opencraft.packet.s2c.PacketUpdateBlock;
 import opencraft.server.OpenCraftServer;
 import opencraft.world.block.Block;
 import opencraft.world.block.IBlock;
@@ -80,6 +81,7 @@ public class EntityChunk extends Entity implements ITickable {
 		
 		char symbol = Block.registry.getCode(block);
 		this.block[coord.x][coord.y][coord.z] = symbol;
+		event().emit(new PacketUpdateBlock(getBlockCoord(coord), symbol));
 		return true;
 	}
 	
@@ -138,14 +140,13 @@ public class EntityChunk extends Entity implements ITickable {
 
 	@Override
 	public void tick() {
-		
-		
 		Random ran = new Random();
 		int x = ran.nextInt(32);
 		int y = ran.nextInt(32);
 		int z = ran.nextInt(32);
 		IBlock b = Block.registry.getBlock(this.block[x][y][z]);
-		b.onChunkTick(OpenCraftServer.instance().getWorldManager().getWorld(world), x + (this.address.x * 32), y + (this.address.y * 32), z + (this.address.z * 32));
+		IBlock nb = b.onChunkTick(OpenCraftServer.instance().getWorldManager().getWorld(world), x + (this.address.x * 32), y + (this.address.y * 32), z + (this.address.z * 32));
+		event().emit(new PacketUpdateBlock(getBlockCoord(new IntXYZ(x, y, z)), Block.registry.getCode(nb)));
 	}
 	
 	class EventListenerOnChunkLoad implements IEventListener {

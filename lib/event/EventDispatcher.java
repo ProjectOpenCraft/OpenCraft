@@ -37,6 +37,12 @@ public class EventDispatcher implements IEventDispatcher {
 		}
 		return mapListener.get(listener.getEventClass()).add(listener);
 	}
+	
+	@Override
+	public boolean removeListener(IEventListener listener) {
+		if (listener == null || this.mapListener.get(listener.getEventClass()) == null) return false;
+		return this.mapListener.get(listener.getEventClass()).remove(listener);
+	}
 
 	@Override
 	public IEvent emit(IEvent event) {

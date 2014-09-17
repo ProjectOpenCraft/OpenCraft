@@ -18,6 +18,7 @@ package opencraft.lib.event;
 public interface IEventDispatcher {
 	
 	boolean addListener(IEventListener listener);
+	boolean removeListener(IEventListener listener);
 	IEvent emit(IEvent event);
 	
 }
