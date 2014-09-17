@@ -15,6 +15,7 @@
 
 package opencraft.lib.event.packet;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -27,16 +28,16 @@ import opencraft.lib.event.IEvent;
 
 public class PacketSender extends EventDispatcher {
 	
-	public OutputStream out;
+	public BufferedOutputStream out;
 	BufferedWriter w;
 	
 	public PacketSender(OutputStream output) {
-		this.out = output;
+		this.out = new BufferedOutputStream(output);
 		this.w = new BufferedWriter(new OutputStreamWriter(output));
 	}
 	
 	@Override
-	public IEvent emit(IEvent event) {
+	public synchronized IEvent emit(IEvent event) {
 		super.emit(event);
 		
 		if (event instanceof Packet) {
@@ -45,6 +46,7 @@ public class PacketSender extends EventDispatcher {
 				data = new StringBuffer("pac").append(data).append("ket").toString();
 				w.write(data);
 				w.flush();
+				((Packet) event).sendBinary(out);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

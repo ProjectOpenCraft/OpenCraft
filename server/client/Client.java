@@ -24,7 +24,6 @@ import opencraft.lib.event.IEvent;
 import opencraft.lib.event.IEventListener;
 import opencraft.lib.event.packet.PacketReceiver;
 import opencraft.lib.event.packet.PacketSender;
-import opencraft.packet.PacketFileEnd;
 import opencraft.packet.PacketFileStart;
 import opencraft.packet.c2s.PacketKeyInput;
 import opencraft.packet.c2s.PacketPlayerSight;
@@ -72,7 +71,6 @@ public class Client implements INamed {
 		
 		//TODO send mod's assets by nio
 		
-		sender.emit(new PacketFileEnd(path));
 	}
 	
 	public PacketReceiver receiver() {

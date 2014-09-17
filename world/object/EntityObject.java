@@ -85,7 +85,7 @@ public abstract class EntityObject extends Entity implements ITickable, INamed {
 	@Override
 	public void tick() {
 		if (!(this.prvCoord.equals(this.coord) && this.prvAngle == this.angle && this.prvRenderType == this.renderType)) {
-			getChunk().event().emit(new PacketUpdateObject(this.coord, this.angle, this.renderType));
+			getChunk().event().emit(new PacketUpdateObject(this.uuid, this.coord, this.angle, this.renderType));
 		}
 	}
 }

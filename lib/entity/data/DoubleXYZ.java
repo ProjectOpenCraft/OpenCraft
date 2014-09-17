@@ -95,6 +95,14 @@ public class DoubleXYZ extends Entity {
 		super.fromJSON(json);
 		return new DoubleXYZ(json);
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof DoubleXYZ) {
+			DoubleXYZ d = (DoubleXYZ) obj;
+			return this.x == d.x && this.y == d.y && this.z == d.z;
+		} else return false;
+	}
 
 	@Override
 	public String getId() {

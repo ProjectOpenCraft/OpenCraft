@@ -1,56 +1,58 @@
-package opencraft.packet.s2c;
+package opencraft.world.object;
 
 import org.json.simple.JSONObject;
 
 import opencraft.lib.entity.Entity;
 import opencraft.lib.entity.IEntity;
 import opencraft.lib.entity.data.DoubleXYZ;
-import opencraft.lib.event.packet.Packet;
 
-public class PacketUpdateObject extends Packet {
+public class ObjectRenderInfo extends Entity {
 
 	@Override
 	public String getId() {
-		return "packet|OpenCraft|updateObject";
+		return "render|OpenCraft|info";
 	}
 	
-	public String uuid;
 	public DoubleXYZ coord;
 	public double angle;
-	public int renderType;
+	public long type;
 	
-	public PacketUpdateObject() {
-		this.uuid = "";
+	public ObjectRenderInfo() {
 		this.coord = null;
 		this.angle = 0d;
-		this.renderType = 0;
+		this.type = 0l;
 	}
 	
-	public PacketUpdateObject(String uuid, DoubleXYZ coord, double angle, int type) {
-		this.uuid = uuid;
+	public ObjectRenderInfo(DoubleXYZ coord, double angle, long type) {
 		this.coord = coord;
 		this.angle = angle;
-		this.renderType = type;
+		this.type = type;
 	}
 	
 	@SuppressWarnings("unchecked")
 	@Override
 	public JSONObject toJSON(JSONObject json) {
 		super.toJSON(json);
-		json.put("uuid", this.uuid);
 		json.put("coord", this.coord.toJSON(new JSONObject()));
 		json.put("angle", this.angle);
-		json.put("type", this.renderType);
+		json.put("type", this.type);
 		return json;
 	}
 	
 	@Override
 	public IEntity fromJSON(JSONObject json) {
 		super.fromJSON(json);
-		this.uuid = (String) json.get("uuid");
 		this.coord = (DoubleXYZ) Entity.registry.getEntity((JSONObject) json.get("coord"));
 		this.angle = (double) json.get("angle");
-		this.renderType = (int) json.get("type");
+		this.type = (long) json.get("type");
 		return this;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof ObjectRenderInfo) {
+			ObjectRenderInfo o = (ObjectRenderInfo)obj;
+			return this.coord.equals(o) && this.angle == o.angle && this.type == o.type; 
+		} else return false;
 	}
 }

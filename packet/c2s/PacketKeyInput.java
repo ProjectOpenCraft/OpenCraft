@@ -24,15 +24,15 @@ public class PacketKeyInput extends Packet {
 	@SuppressWarnings("unchecked")
 	public JSONObject toJSON(JSONObject json) {
 		super.toJSON(json);
-		json.put("n", this.keyName);
-		json.put("d", this.keyDown);
+		json.put("name", this.keyName);
+		json.put("down", this.keyDown);
 		return json;
 	}
 	
 	@Override
 	public IEntity fromJSON(JSONObject json) {
 		super.fromJSON(json);
-		return new PacketKeyInput((String)json.get("n"), (Boolean)json.get("d"));
+		return new PacketKeyInput((String)json.get("name"), (Boolean)json.get("down"));
 	}
 
 	@Override

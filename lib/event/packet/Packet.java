@@ -15,9 +15,10 @@
 
 package opencraft.lib.event.packet;
 
+import java.io.BufferedOutputStream;
 import opencraft.lib.entity.Entity;
 import opencraft.lib.event.IEvent;
 
 public abstract class Packet extends Entity implements IEvent {
-	
+	public void sendBinary(BufferedOutputStream out) {}
 }
