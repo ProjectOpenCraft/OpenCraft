@@ -39,14 +39,13 @@ public class EntityRegistry implements IEntityRegistry {
 	@Override
 	public IEntity getEntity(JSONObject json) {
 		String id = (String) json.get(ENTITY_ID);
+		if (this.mapEntity.get(id) == null) return null;
 		IEntity entity = null;
 		try {
 			entity = this.mapEntity.get(id).newInstance().fromJSON(json);
 		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return entity;
