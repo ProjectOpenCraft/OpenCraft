@@ -42,7 +42,7 @@ import opencraft.world.object.EntityObject;
 public class EntityChunk extends Entity implements ITickable {
 	
 	String world = "";
-	IntXYZ address = new IntXYZ((JSONObject)null);
+	IntXYZ address = new IntXYZ();
 	char[][][] block = new char[32][32][32];
 	EntityStorageIntXYZ entityBlocks = new EntityStorageIntXYZ();
 	EntityStorageList entityObjects = new EntityStorageList();
@@ -83,6 +83,14 @@ public class EntityChunk extends Entity implements ITickable {
 		this.block[coord.x][coord.y][coord.z] = symbol;
 		event().emit(new PacketUpdateBlock(getBlockCoord(coord), symbol));
 		return true;
+	}
+	
+	public void addObject(EntityObject obj) {
+		this.entityObjects.add(obj);
+	}
+	
+	public void removeObject(EntityObject obj) {
+		this.entityObjects.removeValue(obj);
 	}
 	
 	@Override

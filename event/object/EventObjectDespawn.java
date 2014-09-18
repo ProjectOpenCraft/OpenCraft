@@ -19,13 +19,13 @@ import opencraft.event.ICancelable;
 import opencraft.lib.event.IEvent;
 import opencraft.world.object.EntityObject;
 
-public class EventOnObjectDespawn implements IEvent, ICancelable {
+public class EventObjectDespawn implements IEvent, ICancelable {
 	
 	private boolean isCanceled = false;
 	public final EntityObject object;
 	public int lifeTime = 0;
 	
-	public EventOnObjectDespawn(EntityObject obj) {
+	public EventObjectDespawn(EntityObject obj) {
 		this.object = obj;
 	}
 

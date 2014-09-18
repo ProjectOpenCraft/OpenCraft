@@ -17,7 +17,7 @@ package opencraft.world.object;
 
 import org.json.simple.JSONObject;
 
-import opencraft.event.object.EventOnObjectDespawn;
+import opencraft.event.object.EventObjectDespawn;
 import opencraft.item.EntityItem;
 import opencraft.lib.entity.Entity;
 import opencraft.lib.entity.IEntity;
@@ -66,7 +66,7 @@ public class EntityObjectItem extends EntityObject {
 	public void tick() {
 		this.lifeTime--;
 		if (this.lifeTime < 0) {
-			EventOnObjectDespawn event = (EventOnObjectDespawn) event().emit(new EventOnObjectDespawn(this));
+			EventObjectDespawn event = (EventObjectDespawn) event().emit(new EventObjectDespawn(this));
 			if (!event.isCanceled()) {
 				this.lifeTime = event.lifeTime;
 			} else {

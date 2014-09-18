@@ -63,6 +63,10 @@ public abstract class EntityObject extends Entity implements ITickable, INamed {
 		return getWorld().getChunkManager().getChunk(chunk);
 	}
 	
+	public DoubleXYZ getCoord() {
+		return this.coord;
+	}
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public JSONObject toJSON(JSONObject json) {

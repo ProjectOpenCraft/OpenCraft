@@ -5,7 +5,7 @@ import opencraft.world.EntityWorld;
 
 public class EventPlayerJoinWorld implements IEvent {
 	
-	public EntityWorld world;
+	public final EntityWorld world;
 	
 	public EventPlayerJoinWorld(EntityWorld world) {
 		this.world = world;

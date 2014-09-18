@@ -19,7 +19,13 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import opencraft.OpenCraft;
+
+import org.apache.log4j.Logger;
+
 public class TickManager implements ICallable {
+	
+	public Logger log;
 	
 	private TickThread[] threadPool;
 	private TickTimer timer;
@@ -30,24 +36,34 @@ public class TickManager implements ICallable {
 	List<ITickable> listRemove = Collections.synchronizedList(new LinkedList<ITickable>());
 	
 	public TickManager(int sizeThreads, int tickTime) {
+		
+		this.log = OpenCraft.log;
+		log.info("Starting TickManager");
+		
 		this.threadPool = new TickThread[sizeThreads];
+		log.info("Creating " + sizeThreads + " TickThreads");
 		for (int i=0; i<sizeThreads; i++) {
 			threadPool[i] = new TickThread(this);
 		}
+		log.info("TickTimer is setted to " + tickTime);
 		this.timer = new TickTimer(tickTime, this);
 	}
 	
 	public void start() {
+		log.info("Start ticking!");
 		for (int i=0; i<this.threadPool.length; i++) {
 			this.threadPool[i].start();
 		}
+		this.timer.start();
 	}
 	
 	public void addTick(ITickable ticker) {
+		log.debug("Adding tick work " + ticker.getClass().getName());
 		listAdd.add(ticker);
 	}
 	
 	public void removeTick(ITickable ticker) {
+		log.debug("Removing tick work " + ticker.getClass().getName());
 		listRemove.add(ticker);
 	}
 	

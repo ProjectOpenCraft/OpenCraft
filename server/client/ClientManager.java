@@ -15,6 +15,7 @@
 
 package opencraft.server.client;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.HashMap;
@@ -22,9 +23,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
+import opencraft.OpenCraft;
 import opencraft.event.object.living.player.EventPlayerPartWorld;
-import opencraft.lib.entity.IEntity;
-import opencraft.lib.entity.storage.EntityStorageList;
+import opencraft.lib.entity.file.EntityLoader;
 import opencraft.lib.event.IEvent;
 import opencraft.lib.event.IEventListener;
 import opencraft.lib.event.packet.Packet;
@@ -33,23 +36,25 @@ import opencraft.world.object.living.player.Player;
 
 public class ClientManager extends Thread {
 	
+	Logger log;
+	
 	private int port;
 	List<Client> clientPool = new LinkedList<Client>();
 	Map<String, Client> mapClient = new HashMap<String, Client>();
-	EntityStorageList playerEntityPool = new EntityStorageList();
 	
 	public ClientManager(int port) {
+		this.log = OpenCraft.log;
+		log.info("Starting ClientManager");
 		this.port = port;
 	}
 	
-	public void registerPlayer(Player player) {
-		this.playerEntityPool.add(player);
-	}
-	
 	Player getPlayer(String id, String secret) {
-		for (IEntity player : playerEntityPool.values()) {
-			if (player instanceof Player && ((Player) player).isMatchingClient(id) && ((Player) player).isValidClient(secret)) {
-				return (Player)player;
+		for (File file : OpenCraft.playerDir.listFiles()) {
+			if (file.getName().equals(id)) {
+				Player player = (Player) EntityLoader.loadEntity(file);
+				if (player.isMatchingClient(id) && player.isValidClient(secret)) {
+					return player;
+				}
 			}
 		}
 		return null;
@@ -62,10 +67,13 @@ public class ClientManager extends Thread {
 	}
 	
 	public void run() {
+		log.info("ClientManager start listening");
 		try {
 			ServerSocket ss = new ServerSocket(port);
 			while (!this.isInterrupted()) {
+				log.info("Waiting client...");
 				Client client = new Client(ss.accept(), this);
+				log.info("Client detected");
 				this.clientPool.add(client);
 				client.receiver.addListener(new ClientInfoListener(client));
 			}
@@ -78,7 +86,7 @@ public class ClientManager extends Thread {
 	void removeClient(Client client) {
 		client.player.event().emit(new EventPlayerPartWorld(client.player.getWorld()));
 		this.clientPool.remove(client);
-		this.mapClient.remove(client.getName());
+		this.mapClient.remove(client.info.clientId);
 	}
 	
 	class ClientInfoListener implements IEventListener {

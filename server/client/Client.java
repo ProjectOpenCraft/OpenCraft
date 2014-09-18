@@ -19,6 +19,13 @@ import java.io.File;
 import java.io.IOException;
 import java.net.Socket;
 
+import org.apache.log4j.Logger;
+
+import opencraft.OpenCraft;
+import opencraft.event.object.EventObjectDespawn;
+import opencraft.event.object.EventObjectSpawn;
+import opencraft.event.object.living.player.EventPlayerJoinWorld;
+import opencraft.event.object.living.player.EventPlayerPartWorld;
 import opencraft.lib.INamed;
 import opencraft.lib.event.IEvent;
 import opencraft.lib.event.IEventListener;
@@ -27,9 +34,12 @@ import opencraft.lib.event.packet.PacketSender;
 import opencraft.packet.PacketFileStart;
 import opencraft.packet.c2s.PacketKeyInput;
 import opencraft.packet.c2s.PacketPlayerSight;
+import opencraft.server.OpenCraftServer;
 import opencraft.world.object.living.player.Player;
 
 public class Client implements INamed {
+	
+	Logger log;
 	
 	ClientManager manager;
 	ClientInfo info;
@@ -41,6 +51,8 @@ public class Client implements INamed {
 	Player player = null;;
 	
 	public Client(Socket soc, ClientManager manager) throws IOException {
+		this.log = OpenCraft.log;
+		
 		this.socket = soc;
 		this.manager = manager;
 		try {
@@ -56,21 +68,35 @@ public class Client implements INamed {
 	}
 	
 	void join() {
+		log.info(this.info.name + " join the game");
+		
 		this.player = manager.getPlayer(info.clientId, info.clientSecret);
 		if (this.player == null) return;
 		player.setClient(this);
+		
+		OpenCraftServer.instance().getTickManager().addTick(player);
+		player = (Player) player.getWorld().event().emit(new EventObjectSpawn(player));
+		player.getChunk().addObject(player);
+		player.event().emit(new EventPlayerJoinWorld(player.getWorld()));
 		
 		this.receiver.addListener(new KeyInputListener(player));
 		this.receiver.addListener(new PlayerSightListener(player));
 	}
 	
+	void part() {
+		log.info(this.info.name + " part the game");
+		
+		this.player.event().emit(new EventPlayerPartWorld(this.player.getWorld()));
+		player.getChunk().removeObject(player);
+		player.getWorld().event().emit(new EventObjectDespawn(player));
+		OpenCraftServer.instance().getTickManager().removeTick(player);
+		
+	}
+	
 	public static void sendFile(PacketSender sender, File file, String path) {
 		if (!file.exists() || sender == null) return;
 		long length = file.length();
-		sender.emit(new PacketFileStart(path, length));
-		
-		//TODO send mod's assets by nio
-		
+		sender.emit(new PacketFileStart(file, path, length));
 	}
 	
 	public PacketReceiver receiver() {
@@ -113,7 +139,7 @@ public class Client implements INamed {
 		}
 	}
 	
-class PlayerSightListener implements IEventListener {
+	class PlayerSightListener implements IEventListener {
 		
 		Player player;
 		

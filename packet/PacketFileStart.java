@@ -1,6 +1,7 @@
 package opencraft.packet;
 
 import java.io.BufferedOutputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -20,15 +21,18 @@ public class PacketFileStart extends Packet {
 		return "packet|OpenCraft|fileStart";
 	}
 	
+	public final File file;
 	public final String filePath;
 	public final long fileLength;
 	
 	public PacketFileStart() {
+		this.file = null;
 		this.filePath = "";
 		this.fileLength = 0l;
 	}
 	
-	public PacketFileStart(String path, long length) {
+	public PacketFileStart(File file, String path, long length) {
+		this.file = file;
 		this.filePath = path;
 		this.fileLength = length;
 	}
@@ -45,13 +49,13 @@ public class PacketFileStart extends Packet {
 	@Override
 	public IEntity fromJSON(JSONObject json) {
 		super.fromJSON(json);
-		return new PacketFileStart((String)json.get("name"), (Long)json.get("length"));
+		return new PacketFileStart(null, (String)json.get("name"), (Long)json.get("length"));
 	}
 	
 	@Override
 	public void sendBinary(BufferedOutputStream out) {
 		try {
-			FileInputStream fis = new FileInputStream(this.filePath);
+			FileInputStream fis = new FileInputStream(this.file);
 			ReadableByteChannel read = fis.getChannel();
 			WritableByteChannel write = Channels.newChannel(out);
 			ByteBuffer buf = ByteBuffer.allocateDirect(65536);
