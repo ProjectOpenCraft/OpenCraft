@@ -6,4 +6,5 @@ public interface IMod extends IEventHandler {
 	
 	String getName();
 	int getVersion();
+	void init();
 }

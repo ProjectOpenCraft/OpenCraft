@@ -15,8 +15,15 @@
 
 package opencraft.event.mod;
 
+import java.util.List;
+
 import opencraft.lib.event.IEvent;
 
 public class EventPreLoadMod implements IEvent {
-
+	
+	public final List<String> listMod;
+	
+	public EventPreLoadMod(List<String> list) {
+		this.listMod = list;
+	}
 }

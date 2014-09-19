@@ -67,6 +67,7 @@ public class OpenCraftServer {
 			this.tickManager = new TickManager(Integer.parseInt(props.getProperty("tick_threads")), Integer.parseInt(props.getProperty("tick_time_ms")));
 			this.modManager = new ModManager();
 			
+			this.modManager.start();
 			this.tickManager.start();
 			this.clientManager.start();
 			

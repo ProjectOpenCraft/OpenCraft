@@ -60,7 +60,6 @@ public class PacketReceiver extends EventDispatcher {
 					StringBuilder sb = new StringBuilder();
 					
 					String pac = r.readUTF();
-					OpenCraft.log.info(pac);
 					if (pac != null && pac.startsWith("pac")) {
 						sb.append(pac);
 						if (!pac.endsWith("ket")) {
