@@ -16,11 +16,9 @@
 package opencraft.lib.event.packet;
 
 import java.io.BufferedOutputStream;
-import java.io.BufferedWriter;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-
 import org.json.simple.JSONObject;
 
 import opencraft.lib.event.EventDispatcher;
@@ -29,11 +27,11 @@ import opencraft.lib.event.IEvent;
 public class PacketSender extends EventDispatcher {
 	
 	public BufferedOutputStream out;
-	BufferedWriter w;
+	DataOutputStream w;
 	
 	public PacketSender(OutputStream output) {
 		this.out = new BufferedOutputStream(output);
-		this.w = new BufferedWriter(new OutputStreamWriter(output));
+		this.w = new DataOutputStream(new BufferedOutputStream(output));
 	}
 	
 	@Override
@@ -44,7 +42,7 @@ public class PacketSender extends EventDispatcher {
 			String data = ((Packet) event).toJSON(new JSONObject()).toJSONString();
 			try {
 				data = new StringBuffer("pac").append(data).append("ket").toString();
-				w.write(data);
+				w.writeUTF(data);
 				w.flush();
 				((Packet) event).sendBinary(out);
 			} catch (IOException e) {

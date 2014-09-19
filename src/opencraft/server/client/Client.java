@@ -60,7 +60,6 @@ public class Client implements INamed {
 			this.receiver = new PacketReceiver(socket.getInputStream());
 			this.sender = new PacketSender(socket.getOutputStream());
 			
-			
 		} catch(IOException e) {
 			soc.close();
 			manager.removeClient(this);
@@ -95,6 +94,12 @@ public class Client implements INamed {
 		player.getChunk().removeObject(player);
 		player.getWorld().event().emit(new EventObjectDespawn(player));
 		OpenCraftServer.instance().getTickManager().removeTick(player);
+		this.receiver.stop();
+		try {
+			this.socket.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		manager.removeClient(this);
 		
 	}

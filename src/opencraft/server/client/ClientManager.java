@@ -77,9 +77,9 @@ public class ClientManager extends Thread {
 		try {
 			ServerSocket ss = new ServerSocket(port);
 			while (!this.isInterrupted()) {
-				log.info("Waiting client...");
+				log.debug("Waiting client...");
 				Client client = new Client(ss.accept(), this);
-				log.info("Client detected");
+				log.debug("Client detected");
 				this.clientPool.add(client);
 				client.receiver.addListener(new ClientInfoListener(client));
 			}
