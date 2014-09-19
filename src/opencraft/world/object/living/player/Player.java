@@ -23,6 +23,7 @@ import opencraft.event.object.living.player.EventPlayerPartWorld;
 import opencraft.item.EntityItem;
 import opencraft.lib.entity.Entity;
 import opencraft.lib.entity.IEntity;
+import opencraft.lib.entity.data.DoubleXYZ;
 import opencraft.lib.entity.data.IntXYZ;
 import opencraft.lib.event.IEvent;
 import opencraft.lib.event.IEventListener;
@@ -53,9 +54,11 @@ public class Player extends EntityObjectLiving implements IBlockInteractor, IAtt
 		this.event().addListener(new PlayerPartWorldListener(this));
 	}
 	
-	public Player(ClientInfo info) {
-		this();
+	public Player(String world, DoubleXYZ coord, ClientInfo info) {
+		super(world, coord, "player|OpenCraft|stand", 0d, 0d, 100, 100);
 		this.info = info;
+		this.event().addListener(new PlayerJoinWorldListener(this));
+		this.event().addListener(new PlayerPartWorldListener(this));
 	}
 
 	@Override
@@ -106,18 +109,18 @@ public class Player extends EntityObjectLiving implements IBlockInteractor, IAtt
 
 	@Override
 	public void tick() {
-		if (!(this.world == this.prvWorld && this.chunk.equals(this.prvChunk))) {
+		if (!(this.world == this.prvWorld && this.getChunk().getAddress().equals(this.prvChunk))) {
 			EntityWorld w = OpenCraftServer.instance().getWorldManager().getWorld(this.world);
 			for (int i=-5; i<=5; i++) {
 				for (int j=-5; j<=5; j++) {
 					for (int k=-5; k<=5; k++) {
-						if (this.prvChunk.x +i < this.chunk.x -5 || this.prvChunk.x +i > this.chunk.x +5 || this.prvChunk.y +j < this.chunk.y -5 || this.prvChunk.y +j > this.chunk.y +5 || this.prvChunk.z +k < this.chunk.z -5 || this.prvChunk.z +k > this.chunk.z +5) {
+						if (this.prvChunk.x +i < this.getChunk().getAddress().x -5 || this.prvChunk.x +i > this.getChunk().getAddress().x +5 || this.prvChunk.y +j < this.getChunk().getAddress().y -5 || this.prvChunk.y +j > this.getChunk().getAddress().y +5 || this.prvChunk.z +k < this.getChunk().getAddress().z -5 || this.prvChunk.z +k > this.getChunk().getAddress().z +5) {
 							w.getChunkManager().getChunk(new IntXYZ(prvChunk.x +i, prvChunk.y +j, prvChunk.z +k)).event().removeListener(this.blockListener);
 							w.getChunkManager().getChunk(new IntXYZ(prvChunk.x +i, prvChunk.y +j, prvChunk.z +k)).event().removeListener(this.objectListener);
 						}
-						if (this.chunk.x +i < this.prvChunk.x -5 || this.chunk.x +i > this.prvChunk.x +5 || this.chunk.y +j < this.prvChunk.y -5 || this.chunk.y +j > this.prvChunk.y +5 || this.chunk.z +k < this.prvChunk.z -5 || this.chunk.z +k > this.prvChunk.z +5) {
-							w.getChunkManager().getChunk(new IntXYZ(chunk.x +i, chunk.y +j, chunk.z +k)).event().addListener(this.blockListener);
-							w.getChunkManager().getChunk(new IntXYZ(chunk.x +i, chunk.y +j, chunk.z +k)).event().addListener(this.objectListener);
+						if (this.getChunk().getAddress().x +i < this.prvChunk.x -5 || this.getChunk().getAddress().x +i > this.prvChunk.x +5 || this.getChunk().getAddress().y +j < this.prvChunk.y -5 || this.getChunk().getAddress().y +j > this.prvChunk.y +5 || this.getChunk().getAddress().z +k < this.prvChunk.z -5 || this.getChunk().getAddress().z +k > this.prvChunk.z +5) {
+							this.getChunk().event().addListener(this.blockListener);
+							this.getChunk().event().addListener(this.objectListener);
 						}
 					}
 				}
@@ -173,11 +176,9 @@ public class Player extends EntityObjectLiving implements IBlockInteractor, IAtt
 	class PlayerJoinWorldListener implements IEventListener {
 		
 		Player player;
-		EntityWorld world;
 		
 		public PlayerJoinWorldListener(Player p) {
 			this.player = p;
-			this.world = OpenCraftServer.instance().getWorldManager().getWorld(player.world);
 		}
 
 		@Override
@@ -190,8 +191,8 @@ public class Player extends EntityObjectLiving implements IBlockInteractor, IAtt
 			for (int i=-5; i<=5; i++) {
 				for (int j=-5; j<=5; j++) {
 					for (int k=-5; k<=5; k++) {
-						world.getChunkManager().getChunk(new IntXYZ(chunk.x +i, chunk.y +j, chunk.z +k)).event().addListener(player.blockListener);
-						world.getChunkManager().getChunk(new IntXYZ(chunk.x +i, chunk.y +j, chunk.z +k)).event().addListener(player.objectListener);
+						getChunk().event().addListener(player.blockListener);
+						getChunk().event().addListener(player.objectListener);
 					}
 				}
 			}
@@ -202,11 +203,9 @@ public class Player extends EntityObjectLiving implements IBlockInteractor, IAtt
 class PlayerPartWorldListener implements IEventListener {
 		
 		Player player;
-		EntityWorld world;
 		
 		public PlayerPartWorldListener(Player p) {
 			this.player = p;
-			this.world = OpenCraftServer.instance().getWorldManager().getWorld(player.world);
 		}
 
 		@Override
@@ -219,8 +218,8 @@ class PlayerPartWorldListener implements IEventListener {
 			for (int i=-5; i<=5; i++) {
 				for (int j=-5; j<=5; j++) {
 					for (int k=-5; k<=5; k++) {
-						world.getChunkManager().getChunk(new IntXYZ(chunk.x +i, chunk.y +j, chunk.z +k)).event().removeListener(player.blockListener);
-						world.getChunkManager().getChunk(new IntXYZ(chunk.x +i, chunk.y +j, chunk.z +k)).event().removeListener(player.objectListener);
+						getChunk().event().removeListener(player.blockListener);
+						getChunk().event().removeListener(player.objectListener);
 					}
 				}
 			}

@@ -17,16 +17,16 @@ public class PacketUpdateObject extends Packet {
 	public String uuid;
 	public DoubleXYZ coord;
 	public double angle;
-	public int renderType;
+	public String renderType;
 	
 	public PacketUpdateObject() {
 		this.uuid = "";
 		this.coord = null;
 		this.angle = 0d;
-		this.renderType = 0;
+		this.renderType = "";
 	}
 	
-	public PacketUpdateObject(String uuid, DoubleXYZ coord, double angle, int type) {
+	public PacketUpdateObject(String uuid, DoubleXYZ coord, double angle, String type) {
 		this.uuid = uuid;
 		this.coord = coord;
 		this.angle = angle;
@@ -50,7 +50,7 @@ public class PacketUpdateObject extends Packet {
 		this.uuid = (String) json.get("uuid");
 		this.coord = (DoubleXYZ) Entity.registry.getEntity((JSONObject) json.get("coord"));
 		this.angle = (double) json.get("angle");
-		this.renderType = (int) json.get("type");
+		this.renderType = (String) json.get("type");
 		return this;
 	}
 }

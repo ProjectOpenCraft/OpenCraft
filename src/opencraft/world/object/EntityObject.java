@@ -23,7 +23,6 @@ import opencraft.lib.INamed;
 import opencraft.lib.entity.Entity;
 import opencraft.lib.entity.IEntity;
 import opencraft.lib.entity.data.DoubleXYZ;
-import opencraft.lib.entity.data.IntXYZ;
 import opencraft.lib.tick.ITickable;
 import opencraft.packet.s2c.PacketUpdateObject;
 import opencraft.server.OpenCraftServer;
@@ -34,21 +33,27 @@ public abstract class EntityObject extends Entity implements ITickable, INamed {
 	
 	private DoubleXYZ prvCoord;
 	private double prvAngle;
-	private int prvRenderType;
+	private String prvRenderType;
 	
 	protected DoubleXYZ coord;
 	protected double angle;
-	protected int renderType;
+	protected String renderType;
 	
 	protected String world;
-	protected IntXYZ chunk;
 	public final String uuid;
 	
 	public EntityObject() {
 		this.uuid = UUID.randomUUID().toString();
 		this.world = null;
-		this.chunk = null;
 		this.coord = null;
+	}
+	
+	public EntityObject(String world, DoubleXYZ coord, String type) {
+		this();
+		this.world = world;
+		this.coord = coord;
+		this.angle = 0d;
+		this.renderType = type;
 	}
 	
 	public String getUUID() {
@@ -60,7 +65,7 @@ public abstract class EntityObject extends Entity implements ITickable, INamed {
 	}
 	
 	public EntityChunk getChunk() {
-		return getWorld().getChunkManager().getChunk(chunk);
+		return getWorld().getChunkByCoord(coord);
 	}
 	
 	public DoubleXYZ getCoord() {
@@ -72,7 +77,6 @@ public abstract class EntityObject extends Entity implements ITickable, INamed {
 	public JSONObject toJSON(JSONObject json) {
 		super.toJSON(json);
 		json.put("world", this.world);
-		json.put("chunk", this.chunk.toJSON(new JSONObject()));
 		json.put("coord", this.coord.toJSON(new JSONObject()));
 		return json;
 	}
@@ -81,7 +85,6 @@ public abstract class EntityObject extends Entity implements ITickable, INamed {
 	public IEntity fromJSON(JSONObject json) {
 		super.fromJSON(json);
 		this.world = (String) json.get("world");
-		this.chunk = (IntXYZ) Entity.registry.getEntity((JSONObject) json.get("chunk"));
 		this.coord = (DoubleXYZ) Entity.registry.getEntity((JSONObject) json.get("coord"));
 		return this;
 	}

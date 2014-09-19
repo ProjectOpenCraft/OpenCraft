@@ -33,6 +33,7 @@ import opencraft.lib.event.packet.PacketReceiver;
 import opencraft.lib.event.packet.PacketSender;
 import opencraft.packet.PacketFileStart;
 import opencraft.packet.c2s.PacketKeyInput;
+import opencraft.packet.c2s.PacketPartServer;
 import opencraft.packet.c2s.PacketPlayerSight;
 import opencraft.server.OpenCraftServer;
 import opencraft.world.object.living.player.Player;
@@ -70,9 +71,12 @@ public class Client implements INamed {
 	void join() {
 		log.info(this.info.name + " join the game");
 		
-		this.player = manager.getPlayer(info.clientId, info.clientSecret);
+		this.player = manager.getPlayer(info);
 		if (this.player == null) return;
 		player.setClient(this);
+		
+		manager.mapClient.put(info.name, this);
+		manager.clientPool.remove(this);
 		
 		OpenCraftServer.instance().getTickManager().addTick(player);
 		player = (Player) player.getWorld().event().emit(new EventObjectSpawn(player));
@@ -81,6 +85,7 @@ public class Client implements INamed {
 		
 		this.receiver.addListener(new KeyInputListener(player));
 		this.receiver.addListener(new PlayerSightListener(player));
+		this.receiver.addListener(new PartServerListener(this));
 	}
 	
 	void part() {
@@ -90,6 +95,7 @@ public class Client implements INamed {
 		player.getChunk().removeObject(player);
 		player.getWorld().event().emit(new EventObjectDespawn(player));
 		OpenCraftServer.instance().getTickManager().removeTick(player);
+		manager.removeClient(this);
 		
 	}
 	
@@ -155,6 +161,26 @@ public class Client implements INamed {
 		@Override
 		public IEvent handleEvent(IEvent event) {
 			player.event().emit(event);
+			return event;
+		}
+	}
+	
+	class PartServerListener implements IEventListener {
+		
+		Client client;
+		
+		public PartServerListener(Client c) {
+			this.client = c;
+		}
+
+		@Override
+		public Class<? extends IEvent> getEventClass() {
+			return PacketPartServer.class;
+		}
+
+		@Override
+		public IEvent handleEvent(IEvent event) {
+			client.part();
 			return event;
 		}
 	}

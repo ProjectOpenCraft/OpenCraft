@@ -85,6 +85,10 @@ public class EntityChunk extends Entity implements ITickable {
 		return true;
 	}
 	
+	public IntXYZ getAddress() {
+		return this.address;
+	}
+	
 	public void addObject(EntityObject obj) {
 		this.entityObjects.add(obj);
 	}

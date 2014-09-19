@@ -15,6 +15,14 @@ public class FakePlayer {
 			Socket soc = new Socket("127.0.0.1", 39372);
 			BufferedReader r = new BufferedReader(new InputStreamReader(soc.getInputStream()));
 			BufferedWriter w = new BufferedWriter(new OutputStreamWriter(soc.getOutputStream()));
+			BufferedReader cr = new BufferedReader(new InputStreamReader(System.in));
+			BufferedWriter cw = new BufferedWriter(new OutputStreamWriter(System.out));
+			
+			IO send = new IO(cr, w);
+			IO receive = new IO(r, cw);
+			
+			send.start();
+			receive.start();
 			
 		} catch (UnknownHostException e) {
 			e.printStackTrace();

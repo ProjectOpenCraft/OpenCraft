@@ -22,6 +22,11 @@ public class WorldManager {
 	
 	private EntityStorageString worlds = new EntityStorageString();
 	
+	public EntityWorld getWorld() {
+		if (worlds.values().size() < 1) return null;
+		return (EntityWorld) worlds.values().toArray()[0];
+	}
+	
 	public EntityWorld getWorld(String name) {
 		return (EntityWorld) this.worlds.get(name);
 	}

@@ -18,16 +18,32 @@ package opencraft.world.object.living;
 import org.json.simple.JSONObject;
 
 import opencraft.lib.entity.IEntity;
+import opencraft.lib.entity.data.DoubleXYZ;
 import opencraft.world.object.EntityObject;
 
 public abstract class EntityObjectLiving extends EntityObject {
 	
-	protected double angle;
 	protected double headPitch;
 	protected double headYaw;
 	
 	protected int maxHealth;
 	protected int curHealth;
+	
+	public EntityObjectLiving() {
+		super();
+		this.headPitch = 0d;
+		this.headYaw = 0d;
+		this.maxHealth = 0;
+		this.curHealth = 0;
+	}
+	
+	public EntityObjectLiving(String world, DoubleXYZ coord, String type, double pitch, double yaw, int maxHealth, int curHealth) {
+		super(world, coord, type);
+		this.headPitch = pitch;
+		this.headYaw = yaw;
+		this.maxHealth = maxHealth;
+		this.curHealth = curHealth;
+	}
 	
 	@SuppressWarnings("unchecked")
 	@Override

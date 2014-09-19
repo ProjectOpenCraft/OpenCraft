@@ -32,6 +32,8 @@ import opencraft.lib.event.IEvent;
 import opencraft.lib.event.IEventListener;
 import opencraft.lib.event.packet.Packet;
 import opencraft.packet.c2s.PacketClientInfo;
+import opencraft.server.OpenCraftServer;
+import opencraft.world.EntityWorld;
 import opencraft.world.object.living.player.Player;
 
 public class ClientManager extends Thread {
@@ -48,16 +50,20 @@ public class ClientManager extends Thread {
 		this.port = port;
 	}
 	
-	Player getPlayer(String id, String secret) {
+	Player getPlayer(ClientInfo info) {
 		for (File file : OpenCraft.playerDir.listFiles()) {
-			if (file.getName().equals(id)) {
+			if (file.getName().equals(info.clientId)) {
 				Player player = (Player) EntityLoader.loadEntity(file);
-				if (player.isMatchingClient(id) && player.isValidClient(secret)) {
-					return player;
+				if (player.isMatchingClient(info.clientId)) {
+					if (player.isValidClient(info.clientSecret)) {
+						return player;
+					} else return null;
 				}
 			}
 		}
-		return null;
+		EntityWorld world = OpenCraftServer.instance().getWorldManager().getWorld();
+		Player player = new Player(world.getName(), world.getSpawnPoint(), info);
+		return player;
 	}
 	
 	public void sendToAll(Packet packet) {
@@ -84,6 +90,7 @@ public class ClientManager extends Thread {
 	}
 	
 	void removeClient(Client client) {
+		log.info(client.getName() + " is disconnected");
 		client.player.event().emit(new EventPlayerPartWorld(client.player.getWorld()));
 		this.clientPool.remove(client);
 		this.mapClient.remove(client.info.clientId);

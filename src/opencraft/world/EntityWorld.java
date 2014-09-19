@@ -17,6 +17,7 @@ package opencraft.world;
 
 import opencraft.lib.INamed;
 import opencraft.lib.entity.Entity;
+import opencraft.lib.entity.data.DoubleXYZ;
 import opencraft.lib.entity.data.IntXYZ;
 import opencraft.lib.tick.ITickable;
 import opencraft.server.OpenCraftServer;
@@ -28,6 +29,8 @@ public abstract class EntityWorld extends Entity implements ITickable, INamed {
 	
 	public ChunkManager chunkManager = new ChunkManager(this);
 	
+	public DoubleXYZ spawnPoint;
+	
 	public EntityWorld() {
 		OpenCraftServer.instance().getTickManager().addTick(chunkManager);
 	}
@@ -35,6 +38,9 @@ public abstract class EntityWorld extends Entity implements ITickable, INamed {
 	public ChunkManager getChunkManager() {
 		return this.chunkManager;
 	}
+	
+	public abstract DoubleXYZ getSpawnPoint();
+	public abstract DoubleXYZ setSpawnPoint();
 	
 	public IBlock getBlock(IntXYZ coord) {
 		IntXYZ chunkCoord = new IntXYZ(coord.x/32, coord.y/32, coord.z/32);
@@ -50,5 +56,13 @@ public abstract class EntityWorld extends Entity implements ITickable, INamed {
 		EntityChunk chunk = this.chunkManager.getChunk(chunkCoord);
 		if (chunk == null) return false;
 		return chunk.setBlock(block, blockCoord);
+	}
+	
+	public EntityChunk getChunkByCoord(IntXYZ coord) {
+		return this.chunkManager.getChunk(new IntXYZ(coord.x /32, coord.y /32, coord.z /32));
+	}
+	
+	public EntityChunk getChunkByCoord(DoubleXYZ coord) {
+		return this.chunkManager.getChunk(new IntXYZ(((Double)Math.floor(coord.x /32)).intValue(), ((Double)Math.floor(coord.y /32)).intValue(), ((Double)Math.floor(coord.z /32)).intValue()));
 	}
 }
