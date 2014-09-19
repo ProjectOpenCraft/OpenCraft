@@ -1,7 +1,7 @@
 /*
  * OpenCraft - Build your open world!
  * 
- * OpenCraft is a open source game platform to encourage minecraft style modding.
+ * OpenCraft is a open source game platform to encourage sandbox style modding.
  * All code is written by it's own author, from zero-based.
  * This project is distributed under MIT license.
  * 
@@ -32,6 +32,7 @@ import opencraft.lib.event.IEvent;
 import opencraft.lib.event.IEventListener;
 import opencraft.lib.tick.ITickable;
 import opencraft.lib.tick.TickManager;
+import opencraft.packet.s2c.PacketUpdateBlock;
 import opencraft.server.OpenCraftServer;
 import opencraft.world.block.Block;
 import opencraft.world.block.IBlock;
@@ -40,12 +41,8 @@ import opencraft.world.object.EntityObject;
 
 public class EntityChunk extends Entity implements ITickable {
 	
-	static {
-		ENTITY_ID = "world|OpenCraft|entityChunk";
-	}
-	
 	String world = "";
-	IntXYZ address = new IntXYZ((JSONObject)null);
+	IntXYZ address = new IntXYZ();
 	char[][][] block = new char[32][32][32];
 	EntityStorageIntXYZ entityBlocks = new EntityStorageIntXYZ();
 	EntityStorageList entityObjects = new EntityStorageList();
@@ -62,6 +59,13 @@ public class EntityChunk extends Entity implements ITickable {
 		this.address = address;
 	}
 	
+	public IntXYZ getBlockCoord(IntXYZ chunkCoord) {
+		int x = this.address.x * 32 + chunkCoord.x;
+		int y = this.address.y * 32 + chunkCoord.y;
+		int z = this.address.z * 32 + chunkCoord.z;
+		return new IntXYZ(x, y, z);
+	}
+	
 	public IBlock getBlock(IntXYZ coord) {
 		if (coord.x < 0 || coord.y < 0 || coord.z < 0 || coord.x >= 32 || coord.y >= 32 || coord.z >= 32) return null;
 		char symbol = this.block[coord.x][coord.y][coord.z];
@@ -72,12 +76,21 @@ public class EntityChunk extends Entity implements ITickable {
 		if (coord.x < 0 || coord.y < 0 || coord.z < 0 || coord.x >= 32 || coord.y >= 32 || coord.z >= 32) return false;
 		
 		IBlock oldBlock = getBlock(coord);
-		EventBlockChanged event = (EventBlockChanged) event().emit(new EventBlockChanged(oldBlock, block));
+		EventBlockChanged event = (EventBlockChanged) event().emit(new EventBlockChanged(getBlockCoord(coord), oldBlock, block));
 		block = event.newBlock;
 		
 		char symbol = Block.registry.getCode(block);
 		this.block[coord.x][coord.y][coord.z] = symbol;
+		event().emit(new PacketUpdateBlock(getBlockCoord(coord), symbol));
 		return true;
+	}
+	
+	public void addObject(EntityObject obj) {
+		this.entityObjects.add(obj);
+	}
+	
+	public void removeObject(EntityObject obj) {
+		this.entityObjects.removeValue(obj);
 	}
 	
 	@Override
@@ -135,14 +148,13 @@ public class EntityChunk extends Entity implements ITickable {
 
 	@Override
 	public void tick() {
-		
-		
 		Random ran = new Random();
 		int x = ran.nextInt(32);
 		int y = ran.nextInt(32);
 		int z = ran.nextInt(32);
 		IBlock b = Block.registry.getBlock(this.block[x][y][z]);
-		b.onChunkTick(OpenCraftServer.instance().getWorldManager().getWorld(world), x + (this.address.x * 32), y + (this.address.y * 32), z + (this.address.z * 32));
+		IBlock nb = b.onChunkTick(OpenCraftServer.instance().getWorldManager().getWorld(world), x + (this.address.x * 32), y + (this.address.y * 32), z + (this.address.z * 32));
+		event().emit(new PacketUpdateBlock(getBlockCoord(new IntXYZ(x, y, z)), Block.registry.getCode(nb)));
 	}
 	
 	class EventListenerOnChunkLoad implements IEventListener {
@@ -211,5 +223,10 @@ public class EntityChunk extends Entity implements ITickable {
 			return event;
 		}
 		
+	}
+
+	@Override
+	public String getId() {
+		return "world|OpenCraft|chunk";
 	}
 }

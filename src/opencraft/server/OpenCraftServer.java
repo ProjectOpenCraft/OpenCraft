@@ -1,7 +1,7 @@
 /*
  * OpenCraft - Build your open world!
  * 
- * OpenCraft is a open source game platform to encourage minecraft style modding.
+ * OpenCraft is a open source game platform to encourage sandbox style modding.
  * All code is written by it's own author, from zero-based.
  * This project is distributed under MIT license.
  * 
@@ -21,15 +21,19 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
 
+import org.apache.log4j.Logger;
+
 import opencraft.OpenCraft;
-import opencraft.lib.client.ClientManager;
 import opencraft.lib.tick.TickManager;
 import opencraft.mod.ModManager;
+import opencraft.server.client.ClientManager;
 import opencraft.world.WorldManager;
 
 public class OpenCraftServer {
 	
 	private static OpenCraftServer instance = null;
+	
+	public Logger log;
 	
 	public static OpenCraftServer instance() {
 		if (instance == null)
@@ -43,6 +47,8 @@ public class OpenCraftServer {
 	private ModManager modManager;
 	
 	private OpenCraftServer() {
+		this.log = OpenCraft.log;
+		log.info("Starting OpenCraft Server");
 		try {
 			Properties props = new Properties();
 			File propsF = new File(OpenCraft.runDir, "server.properties");
@@ -61,7 +67,8 @@ public class OpenCraftServer {
 			this.tickManager = new TickManager(Integer.parseInt(props.getProperty("tick_threads")), Integer.parseInt(props.getProperty("tick_time_ms")));
 			this.modManager = new ModManager();
 			
-			
+			this.tickManager.start();
+			this.clientManager.start();
 			
 		} catch (IOException e) {
 			e.printStackTrace();

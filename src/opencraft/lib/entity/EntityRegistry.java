@@ -1,7 +1,7 @@
 /*
  * OpenCraft - Build your open world!
  * 
- * OpenCraft is a open source game platform to encourage minecraft style modding.
+ * OpenCraft is a open source game platform to encourage sandbox style modding.
  * All code is written by it's own author, from zero-based.
  * This project is distributed under MIT license.
  * 
@@ -39,14 +39,13 @@ public class EntityRegistry implements IEntityRegistry {
 	@Override
 	public IEntity getEntity(JSONObject json) {
 		String id = (String) json.get(ENTITY_ID);
+		if (this.mapEntity.get(id) == null) return null;
 		IEntity entity = null;
 		try {
 			entity = this.mapEntity.get(id).newInstance().fromJSON(json);
 		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return entity;

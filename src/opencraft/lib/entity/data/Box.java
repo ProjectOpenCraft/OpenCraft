@@ -1,7 +1,7 @@
 /*
  * OpenCraft - Build your open world!
  * 
- * OpenCraft is a open source game platform to encourage minecraft style modding.
+ * OpenCraft is a open source game platform to encourage sandbox style modding.
  * All code is written by it's own author, from zero-based.
  * This project is distributed under MIT license.
  * 
@@ -23,9 +23,6 @@ import opencraft.lib.entity.IEntity;
 
 public class Box extends Entity {
 	
-	static {
-		ENTITY_ID = "data|OpenCraft|Box";
-	}
 	
 	public final double mX, mY, mZ, MX, MY, MZ;
 	

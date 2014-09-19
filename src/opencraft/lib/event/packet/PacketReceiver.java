@@ -1,7 +1,7 @@
 /*
  * OpenCraft - Build your open world!
  * 
- * OpenCraft is a open source game platform to encourage minecraft style modding.
+ * OpenCraft is a open source game platform to encourage sandbox style modding.
  * All code is written by it's own author, from zero-based.
  * This project is distributed under MIT license.
  * 
@@ -22,27 +22,25 @@ import java.io.InputStreamReader;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
-import opencraft.lib.entity.IEntityRegistry;
+import opencraft.lib.entity.Entity;
 import opencraft.lib.event.EventDispatcher;
 
 public class PacketReceiver extends EventDispatcher {
 	
-	public PacketReceiver(IEntityRegistry registry, InputStream input) {
+	public PacketReceiver(InputStream input) {
 		super();
-		ReceiverThread thread = new ReceiverThread(this, registry, input);
+		ReceiverThread thread = new ReceiverThread(this, input);
 		thread.start();
 	}
 	
 	class ReceiverThread extends Thread {
 		
 		PacketReceiver pr;
-		IEntityRegistry registry;
 		BufferedReader r;
 		JSONParser parser;
 		
-		public ReceiverThread(PacketReceiver pr, IEntityRegistry registry, InputStream input) {
+		public ReceiverThread(PacketReceiver pr, InputStream input) {
 			this.pr = pr;
-			this.registry = registry;
 			this.r = new BufferedReader(new InputStreamReader(input));
 			this.parser = new JSONParser();
 		}
@@ -61,9 +59,9 @@ public class PacketReceiver extends EventDispatcher {
 							sb.append(stack);
 						} while (!stack.endsWith("ket"));
 					}
-					
-					JSONObject json = (JSONObject) parser.parse(sb.toString());
-					Packet packet = (Packet) registry.getEntity(json);
+					String data = sb.toString();
+					JSONObject json = (JSONObject) parser.parse(data.substring(3, data.length() - 3));
+					Packet packet = (Packet) Entity.registry.getEntity(json);
 					
 					pr.emit(packet);
 					

@@ -1,7 +1,7 @@
 /*
  * OpenCraft - Build your open world!
  * 
- * OpenCraft is a open source game platform to encourage minecraft style modding.
+ * OpenCraft is a open source game platform to encourage sandbox style modding.
  * All code is written by it's own author, from zero-based.
  * This project is distributed under MIT license.
  * 
@@ -24,5 +24,7 @@ public interface IBlock extends INamed {
 	 * Return unique string-id for each blocks
 	 */
 	String getId();
-	void onChunkTick(EntityWorld world, int x, int y, int z);
+	IBlock onChunkTick(EntityWorld world, int x, int y, int z);
+	boolean isFullCube();
+	
 }

@@ -1,7 +1,7 @@
 /*
  * OpenCraft - Build your open world!
  * 
- * OpenCraft is a open source game platform to encourage minecraft style modding.
+ * OpenCraft is a open source game platform to encourage sandbox style modding.
  * All code is written by it's own author, from zero-based.
  * This project is distributed under MIT license.
  * 
@@ -26,9 +26,6 @@ import opencraft.world.chunk.EntityChunk;
 
 public abstract class EntityWorld extends Entity implements ITickable, INamed {
 	
-	static {
-		ENTITY_ID = "world|OpenCraft|base";
-	}
 	public ChunkManager chunkManager = new ChunkManager(this);
 	
 	public EntityWorld() {

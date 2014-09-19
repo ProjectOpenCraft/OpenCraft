@@ -1,7 +1,7 @@
 /*
  * OpenCraft - Build your open world!
  * 
- * OpenCraft is a open source game platform to encourage minecraft style modding.
+ * OpenCraft is a open source game platform to encourage sandbox style modding.
  * All code is written by it's own author, from zero-based.
  * This project is distributed under MIT license.
  * 
@@ -17,16 +17,12 @@ package opencraft.world.object;
 
 import org.json.simple.JSONObject;
 
-import opencraft.event.object.EventOnObjectDespawn;
+import opencraft.event.object.EventObjectDespawn;
 import opencraft.item.EntityItem;
 import opencraft.lib.entity.Entity;
 import opencraft.lib.entity.IEntity;
 
 public class EntityObjectItem extends EntityObject {
-	
-	static {
-		ENTITY_ID = "object|OpenCraft|item";
-	}
 	
 	private int lifeTime;
 	
@@ -70,12 +66,17 @@ public class EntityObjectItem extends EntityObject {
 	public void tick() {
 		this.lifeTime--;
 		if (this.lifeTime < 0) {
-			EventOnObjectDespawn event = (EventOnObjectDespawn) event().emit(new EventOnObjectDespawn(this));
+			EventObjectDespawn event = (EventObjectDespawn) event().emit(new EventObjectDespawn(this));
 			if (!event.isCanceled()) {
 				this.lifeTime = event.lifeTime;
 			} else {
 				
 			}
 		}
+	}
+
+	@Override
+	public String getId() {
+		return "object|OpenCraft|item";
 	}
 }

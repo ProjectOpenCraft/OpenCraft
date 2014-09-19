@@ -1,7 +1,7 @@
 /*
  * OpenCraft - Build your open world!
  * 
- * OpenCraft is a open source game platform to encourage minecraft style modding.
+ * OpenCraft is a open source game platform to encourage sandbox style modding.
  * All code is written by it's own author, from zero-based.
  * This project is distributed under MIT license.
  * 
@@ -36,6 +36,12 @@ public class EventDispatcher implements IEventDispatcher {
 			mapListener.put((Class<? extends IEvent>) listener.getEventClass(), Collections.synchronizedList(new ArrayList<IEventListener>()));
 		}
 		return mapListener.get(listener.getEventClass()).add(listener);
+	}
+	
+	@Override
+	public boolean removeListener(IEventListener listener) {
+		if (listener == null || this.mapListener.get(listener.getEventClass()) == null) return false;
+		return this.mapListener.get(listener.getEventClass()).remove(listener);
 	}
 
 	@Override
