@@ -24,6 +24,7 @@ public class TickThread extends Thread {
 	
 	TickThread(TickManager m) {
 		this.manager = m;
+		this.setName("TickThread");
 	}
 	
 	public void run() {

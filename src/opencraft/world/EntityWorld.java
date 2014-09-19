@@ -15,15 +15,19 @@
 
 package opencraft.world;
 
+import opencraft.event.object.EventObjectSpawn;
 import opencraft.lib.INamed;
 import opencraft.lib.entity.Entity;
 import opencraft.lib.entity.data.DoubleXYZ;
 import opencraft.lib.entity.data.IntXYZ;
+import opencraft.lib.event.IEvent;
+import opencraft.lib.event.IEventListener;
 import opencraft.lib.tick.ITickable;
 import opencraft.server.OpenCraftServer;
 import opencraft.world.block.IBlock;
 import opencraft.world.chunk.ChunkManager;
 import opencraft.world.chunk.EntityChunk;
+import opencraft.world.object.living.player.Player;
 
 public abstract class EntityWorld extends Entity implements ITickable, INamed {
 	
@@ -33,6 +37,23 @@ public abstract class EntityWorld extends Entity implements ITickable, INamed {
 	
 	public EntityWorld() {
 		OpenCraftServer.instance().getTickManager().addTick(chunkManager);
+		event().addListener(new IEventListener() {
+
+			@Override
+			public Class<? extends IEvent> getEventClass() {
+				return EventObjectSpawn.class;
+			}
+
+			@Override
+			public IEvent handleEvent(IEvent event) {
+				EventObjectSpawn e = (EventObjectSpawn) event;
+				if (e.obj instanceof Player) {
+					
+				}
+				return e;
+			}
+			
+		});
 	}
 	
 	public ChunkManager getChunkManager() {
@@ -40,7 +61,7 @@ public abstract class EntityWorld extends Entity implements ITickable, INamed {
 	}
 	
 	public abstract DoubleXYZ getSpawnPoint();
-	public abstract DoubleXYZ setSpawnPoint();
+	public abstract void setSpawnPoint(DoubleXYZ spawn);
 	
 	public IBlock getBlock(IntXYZ coord) {
 		IntXYZ chunkCoord = new IntXYZ(coord.x/32, coord.y/32, coord.z/32);

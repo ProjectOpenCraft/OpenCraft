@@ -43,6 +43,8 @@ import opencraft.packet.s2c.PacketUpdateObject;
 import opencraft.packet.s2c.PacketYouDied;
 import opencraft.server.OpenCraftServer;
 import opencraft.server.client.ClientInfo;
+import opencraft.world.block.Block;
+import opencraft.world.block.BlockAir;
 import opencraft.world.chunk.EntityChunk;
 import opencraft.world.object.EntityObjectItem;
 import opencraft.world.object.ObjectRenderInfo;
@@ -61,8 +63,13 @@ public class OpenCraft {
 		BasicConfigurator.configure();
 		log = LogManager.getLogger("[OpenCraft]");
 		createDir();
+		registerBlock();
 		registerEntity();
-		OpenCraftServer.instance();
+		OpenCraftServer.instance().start();
+	}
+	
+	private static void registerBlock() {
+		Block.registry.registerBlock(new BlockAir());
 	}
 	
 	private static void registerEntity() {
@@ -98,7 +105,7 @@ public class OpenCraft {
 	
 	private static void createDir() {
 		modDir.mkdirs();
-		playerDir.mkdirs();
 		worldDir.mkdirs();
+		playerDir.mkdirs();
 	}
 }

@@ -27,6 +27,7 @@ import opencraft.event.object.EventObjectSpawn;
 import opencraft.event.object.living.player.EventPlayerJoinWorld;
 import opencraft.event.object.living.player.EventPlayerPartWorld;
 import opencraft.lib.INamed;
+import opencraft.lib.entity.data.IntXYZ;
 import opencraft.lib.event.IEvent;
 import opencraft.lib.event.IEventListener;
 import opencraft.lib.event.packet.PacketReceiver;
@@ -36,6 +37,8 @@ import opencraft.packet.c2s.PacketKeyInput;
 import opencraft.packet.c2s.PacketPartServer;
 import opencraft.packet.c2s.PacketPlayerSight;
 import opencraft.server.OpenCraftServer;
+import opencraft.world.EntityWorld;
+import opencraft.world.chunk.ChunkManager;
 import opencraft.world.object.living.player.Player;
 
 public class Client implements INamed {
@@ -68,18 +71,21 @@ public class Client implements INamed {
 	}
 	
 	void join() {
+		
 		log.info(this.info.name + " join the game");
 		
 		this.player = manager.getPlayer(info);
 		if (this.player == null) return;
 		player.setClient(this);
 		
+		IntXYZ chunkAddr = new IntXYZ(((Double)player.getCoord().x).intValue(), ((Double)player.getCoord().y).intValue(), ((Double)player.getCoord().z).intValue());
+		
 		manager.mapClient.put(info.name, this);
 		manager.clientPool.remove(this);
 		
 		OpenCraftServer.instance().getTickManager().addTick(player);
-		player = (Player) player.getWorld().event().emit(new EventObjectSpawn(player));
-		player.getChunk().addObject(player);
+		player = (Player) ((EventObjectSpawn) player.getWorld().event().emit(new EventObjectSpawn(player))).obj;
+		player.getWorld().getChunkManager().forceLoadChunk(chunkAddr).addObject(player);
 		player.event().emit(new EventPlayerJoinWorld(player.getWorld()));
 		
 		this.receiver.addListener(new KeyInputListener(player));

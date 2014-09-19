@@ -73,7 +73,7 @@ public class PacketReceiver extends EventDispatcher {
 						JSONObject json = (JSONObject) parser.parse(data.substring(3, data.length() - 3));
 						Packet packet = (Packet) Entity.registry.getEntity(json);
 						
-						OpenCraft.log.info(data);
+						OpenCraft.log.debug(data);
 						pr.emit(packet);
 					}
 					

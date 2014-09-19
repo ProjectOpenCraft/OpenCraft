@@ -15,7 +15,29 @@
 
 package opencraft.world.block;
 
+import opencraft.world.EntityWorld;
+
 public abstract class Block implements IBlock {
 	
 	public static BlockRegistry registry = new BlockRegistry();
+	
+	public IBlock onChunkTick(EntityWorld world, int x, int y, int z) {
+		return this;
+	}
+	
+	public boolean isFullCube() {
+		return true;
+	}
+	
+	public boolean isTransparent() {
+		return false;
+	}
+	
+	public boolean isReplaceable() {
+		return false;
+	}
+	
+	public boolean isFluid() {
+		return false;
+	}
 }

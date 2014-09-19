@@ -114,6 +114,7 @@ public class Player extends EntityObjectLiving implements IBlockInteractor, IAtt
 			for (int i=-5; i<=5; i++) {
 				for (int j=-5; j<=5; j++) {
 					for (int k=-5; k<=5; k++) {
+						w.chunkManager.loadChunk(new IntXYZ(getChunk().getAddress().x +i, getChunk().getAddress().y +j, getChunk().getAddress().z +k));
 						if (this.prvChunk.x +i < this.getChunk().getAddress().x -5 || this.prvChunk.x +i > this.getChunk().getAddress().x +5 || this.prvChunk.y +j < this.getChunk().getAddress().y -5 || this.prvChunk.y +j > this.getChunk().getAddress().y +5 || this.prvChunk.z +k < this.getChunk().getAddress().z -5 || this.prvChunk.z +k > this.getChunk().getAddress().z +5) {
 							w.getChunkManager().getChunk(new IntXYZ(prvChunk.x +i, prvChunk.y +j, prvChunk.z +k)).event().removeListener(this.blockListener);
 							w.getChunkManager().getChunk(new IntXYZ(prvChunk.x +i, prvChunk.y +j, prvChunk.z +k)).event().removeListener(this.objectListener);
@@ -191,8 +192,8 @@ public class Player extends EntityObjectLiving implements IBlockInteractor, IAtt
 			for (int i=-5; i<=5; i++) {
 				for (int j=-5; j<=5; j++) {
 					for (int k=-5; k<=5; k++) {
-						getChunk().event().addListener(player.blockListener);
-						getChunk().event().addListener(player.objectListener);
+						player.getChunk().event().addListener(player.blockListener);
+						player.getChunk().event().addListener(player.objectListener);
 					}
 				}
 			}
@@ -218,8 +219,8 @@ class PlayerPartWorldListener implements IEventListener {
 			for (int i=-5; i<=5; i++) {
 				for (int j=-5; j<=5; j++) {
 					for (int k=-5; k<=5; k++) {
-						getChunk().event().removeListener(player.blockListener);
-						getChunk().event().removeListener(player.objectListener);
+						player.getChunk().event().removeListener(player.blockListener);
+						player.getChunk().event().removeListener(player.objectListener);
 					}
 				}
 			}

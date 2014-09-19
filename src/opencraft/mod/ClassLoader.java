@@ -22,10 +22,14 @@ public class ClassLoader {
 				if (element.getName().endsWith(".class")) {
 					@SuppressWarnings("rawtypes")
 					Class clazz = classLoader.loadClass(element.getName().replaceAll(".class", "").replaceAll("/", "."));
-					Object obj = clazz.newInstance();
-					if (obj instanceof IMod) {
+					try {
+						Object obj = clazz.newInstance();
+						if (obj instanceof IMod) {
 						return (IMod) obj;
+						}
+					} catch (InstantiationException e) {
 					}
+					
 				}
 			}
 		} catch(MalformedURLException e) {
@@ -33,8 +37,6 @@ public class ClassLoader {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (InstantiationException e) {
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();

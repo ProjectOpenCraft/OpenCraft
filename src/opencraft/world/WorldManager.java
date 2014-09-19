@@ -15,6 +15,9 @@
 
 package opencraft.world;
 
+import java.io.File;
+
+import opencraft.OpenCraft;
 import opencraft.lib.entity.storage.EntityStorageString;
 import opencraft.server.OpenCraftServer;
 
@@ -32,6 +35,9 @@ public class WorldManager {
 	}
 	
 	public void registerWorld(EntityWorld world) {
+		OpenCraft.log.info("Registering world " + world.getName());
+		File worldFolder = new File(OpenCraft.worldDir, world.getName());
+		if (!worldFolder.exists()) OpenCraft.log.debug("Making world folder? " + worldFolder.mkdirs()); 
 		this.worlds.put(world.getName(), world);
 		OpenCraftServer.instance().getTickManager().addTick(world);
 	}

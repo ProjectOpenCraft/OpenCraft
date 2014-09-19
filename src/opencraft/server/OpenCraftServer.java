@@ -31,7 +31,7 @@ import opencraft.world.WorldManager;
 
 public class OpenCraftServer {
 	
-	private static OpenCraftServer instance = null;
+	private static OpenCraftServer instance;
 	
 	public Logger log;
 	
@@ -47,6 +47,10 @@ public class OpenCraftServer {
 	private ModManager modManager;
 	
 	private OpenCraftServer() {
+		
+	}
+	
+	public void start() {
 		this.log = OpenCraft.log;
 		log.info("Starting OpenCraft Server");
 		try {

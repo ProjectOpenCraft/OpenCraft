@@ -38,11 +38,26 @@ public class ChunkManager implements ITickable {
 		this.world = world;
 	}
 	
-	public void loadChunk(EntityChunk chunk) {
-		this.loadingChunkAddresses.add(chunk);
+	public void loadChunk(IntXYZ address) {
+		this.loadingChunkAddresses.add(address);
 	}
 	
 	public EntityChunk getChunk(IntXYZ address) {
+		return (EntityChunk) this.chunks.get(address);
+	}
+	
+	public EntityChunk forceLoadChunk(IntXYZ address) {
+		this.loadChunk(address);
+		if (this.chunks.get(address) == null) {
+			File chunkFile = new File(new File(OpenCraft.worldDir, world.getName()), address.toString());
+			if (!chunkFile.exists()) {
+				EntityChunk chunk = ((EventGenerateChunk)world.event().emit(new EventGenerateChunk(new EntityChunk(world.getId(), address)))).chunk;
+				chunk = ((EventDecorateChunk)world.event().emit(new EventDecorateChunk(chunk))).chunk;
+				this.chunks.put(address, chunk);
+			} else {
+				this.chunks.put(address, EntityLoader.loadEntity(chunkFile));
+			}
+		}
 		return (EntityChunk) this.chunks.get(address);
 	}
 
@@ -52,9 +67,10 @@ public class ChunkManager implements ITickable {
 		Collection<IEntity> oldChunks = this.loadedChunkAddresses.values();
 		Collection<IEntity> newChunks = this.loadingChunkAddresses.values();
 		newChunks.removeAll(this.loadedChunkAddresses.values());
-		oldChunks.removeAll(this.loadingChunkAddresses.values());
+		oldChunks.removeAll(loadingChunkAddressesCopy.values());
 		
 		File worldDir = new File(OpenCraft.worldDir, world.getName());
+		if (!worldDir.exists()) worldDir.mkdirs();
 		
 		for (IEntity oldChunk : oldChunks) {
 			EntityChunk chunk = (EntityChunk) this.chunks.get(oldChunk);

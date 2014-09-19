@@ -56,6 +56,10 @@ public class BlockRegistry extends Entity {
 		return this.blockMap.get(this.charMap.get(symbol));
 	}
 	
+	public IBlock getBlock(String id) {
+		return this.blockMap.get(id);
+	}
+	
 	public char getCode(IBlock block) {
 		String id = block.getId();
 		return this.revCharMap.get(id);
