@@ -49,6 +49,7 @@ public class PacketReceiver extends EventDispatcher {
 		JSONParser parser;
 		
 		public ReceiverThread(PacketReceiver pr, InputStream input) {
+			this.setName("PacketReceiver");
 			this.pr = pr;
 			this.r = new DataInputStream(new BufferedInputStream(input));
 			this.parser = new JSONParser();

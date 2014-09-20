@@ -59,16 +59,23 @@ public class TickManager implements ICallable {
 	
 	public void addTick(ITickable ticker) {
 		log.debug("Adding tick work " + ticker.getClass().getName());
-		listAdd.add(ticker);
+		if (ticker != null)
+			synchronized(listAdd) {
+				listAdd.add(ticker);
+			}
 	}
 	
 	public void removeTick(ITickable ticker) {
 		log.debug("Removing tick work " + ticker.getClass().getName());
-		listRemove.add(ticker);
+		if (ticker != null)
+			synchronized(listRemove) {
+				listRemove.add(ticker);
+			}
 	}
 	
 	synchronized ITickable getWork(ITickable work) {
-		listDone.add(work);
+		if (work != null)
+			listDone.add(work);
 		return listWork.size() > 0 ? listWork.remove(0) : null;
 	}
 	
@@ -85,13 +92,26 @@ public class TickManager implements ICallable {
 				e.printStackTrace();
 			}
 		} else {
-			listDone.removeAll(listRemove);
-			listDone.addAll(listAdd);
+			synchronized(listRemove) {
+				for (ITickable tick : this.listRemove) {
+					this.listDone.remove(tick);
+				}
+			}
+			synchronized(listAdd) {
+				for (ITickable tick : this.listAdd) {
+					if (tick != null)
+						this.listDone.add(tick);
+				}
+			}
 			listRemove.clear();
 			listAdd.clear();
 			
 			listWork.clear();
-			listWork.addAll(listDone);
+			synchronized(listDone) {
+				for (ITickable tick : this.listDone) {
+					this.listWork.add(tick);
+				}
+			}
 			
 			listDone.clear();
 			

@@ -28,6 +28,7 @@ import opencraft.event.object.living.player.EventPlayerJoinWorld;
 import opencraft.event.object.living.player.EventPlayerPartWorld;
 import opencraft.lib.INamed;
 import opencraft.lib.entity.data.IntXYZ;
+import opencraft.lib.entity.file.EntityLoader;
 import opencraft.lib.event.IEvent;
 import opencraft.lib.event.IEventListener;
 import opencraft.lib.event.packet.PacketReceiver;
@@ -37,8 +38,6 @@ import opencraft.packet.c2s.PacketKeyInput;
 import opencraft.packet.c2s.PacketPartServer;
 import opencraft.packet.c2s.PacketPlayerSight;
 import opencraft.server.OpenCraftServer;
-import opencraft.world.EntityWorld;
-import opencraft.world.chunk.ChunkManager;
 import opencraft.world.object.living.player.Player;
 
 public class Client implements INamed {
@@ -100,6 +99,12 @@ public class Client implements INamed {
 		player.getChunk().removeObject(player);
 		player.getWorld().event().emit(new EventObjectDespawn(player));
 		OpenCraftServer.instance().getTickManager().removeTick(player);
+		try {
+			EntityLoader.saveEntity(player, new File(OpenCraft.playerDir, player.getUUID()));
+			log.info("Saved player informations");
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
 		this.receiver.stop();
 		try {
 			this.socket.close();

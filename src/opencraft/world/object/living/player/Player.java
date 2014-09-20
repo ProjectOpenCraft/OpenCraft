@@ -27,13 +27,13 @@ import opencraft.lib.entity.data.DoubleXYZ;
 import opencraft.lib.entity.data.IntXYZ;
 import opencraft.lib.event.IEvent;
 import opencraft.lib.event.IEventListener;
+import opencraft.packet.s2c.PacketFullChunk;
 import opencraft.packet.s2c.PacketUpdateBlock;
 import opencraft.packet.s2c.PacketUpdateObject;
-import opencraft.server.OpenCraftServer;
 import opencraft.server.client.Client;
 import opencraft.server.client.ClientInfo;
-import opencraft.world.EntityWorld;
 import opencraft.world.block.IBlockInteractor;
+import opencraft.world.chunk.EntityChunk;
 import opencraft.world.object.living.EntityObjectLiving;
 import opencraft.world.object.living.IAttacker;
 
@@ -109,19 +109,20 @@ public class Player extends EntityObjectLiving implements IBlockInteractor, IAtt
 
 	@Override
 	public void tick() {
-		if (!(this.world == this.prvWorld && this.getChunk().getAddress().equals(this.prvChunk))) {
-			EntityWorld w = OpenCraftServer.instance().getWorldManager().getWorld(this.world);
-			for (int i=-5; i<=5; i++) {
-				for (int j=-5; j<=5; j++) {
-					for (int k=-5; k<=5; k++) {
-						w.chunkManager.loadChunk(new IntXYZ(getChunk().getAddress().x +i, getChunk().getAddress().y +j, getChunk().getAddress().z +k));
+		for (int i=-5; i<=5; i++) {
+			for (int j=-5; j<=5; j++) {
+				for (int k=-5; k<=5; k++) {
+					getWorld().chunkManager.loadChunk(new IntXYZ(((Double)(getCoord().x /32d)).intValue() +i, ((Double)(getCoord().y /32d)).intValue() +j, ((Double)(getCoord().z /32d)).intValue() +k));
+					if (!(this.world == this.prvWorld && this.getChunk().getAddress().equals(this.prvChunk))) {
 						if (this.prvChunk.x +i < this.getChunk().getAddress().x -5 || this.prvChunk.x +i > this.getChunk().getAddress().x +5 || this.prvChunk.y +j < this.getChunk().getAddress().y -5 || this.prvChunk.y +j > this.getChunk().getAddress().y +5 || this.prvChunk.z +k < this.getChunk().getAddress().z -5 || this.prvChunk.z +k > this.getChunk().getAddress().z +5) {
-							w.getChunkManager().getChunk(new IntXYZ(prvChunk.x +i, prvChunk.y +j, prvChunk.z +k)).event().removeListener(this.blockListener);
-							w.getChunkManager().getChunk(new IntXYZ(prvChunk.x +i, prvChunk.y +j, prvChunk.z +k)).event().removeListener(this.objectListener);
+							getWorld().getChunkManager().getChunk(new IntXYZ(prvChunk.x +i, prvChunk.y +j, prvChunk.z +k)).event().removeListener(this.blockListener);
+							getWorld().getChunkManager().getChunk(new IntXYZ(prvChunk.x +i, prvChunk.y +j, prvChunk.z +k)).event().removeListener(this.objectListener);
 						}
 						if (this.getChunk().getAddress().x +i < this.prvChunk.x -5 || this.getChunk().getAddress().x +i > this.prvChunk.x +5 || this.getChunk().getAddress().y +j < this.prvChunk.y -5 || this.getChunk().getAddress().y +j > this.prvChunk.y +5 || this.getChunk().getAddress().z +k < this.prvChunk.z -5 || this.getChunk().getAddress().z +k > this.prvChunk.z +5) {
-							this.getChunk().event().addListener(this.blockListener);
-							this.getChunk().event().addListener(this.objectListener);
+							EntityChunk newChunk = getWorld().getChunkManager().getChunk(new IntXYZ(getChunk().getAddress().x +i, getChunk().getAddress().y +j, getChunk().getAddress().z +k));
+							newChunk.event().addListener(this.blockListener);
+							newChunk.event().addListener(this.objectListener);
+							this.client.sender().emit(new PacketFullChunk(newChunk.getChunkBlockData(), newChunk.getObjectList()));
 						}
 					}
 				}
@@ -192,8 +193,12 @@ public class Player extends EntityObjectLiving implements IBlockInteractor, IAtt
 			for (int i=-5; i<=5; i++) {
 				for (int j=-5; j<=5; j++) {
 					for (int k=-5; k<=5; k++) {
-						player.getChunk().event().addListener(player.blockListener);
-						player.getChunk().event().addListener(player.objectListener);
+						player.getWorld().getChunkManager().loadChunk(new IntXYZ(((Double)Math.floor(coord.x /32)).intValue(), ((Double)Math.floor(coord.y /32)).intValue(), ((Double)Math.floor(coord.z /32)).intValue()));
+						EntityChunk cnk = player.getWorld().getChunkManager().forceLoadChunk(new IntXYZ(((Double)Math.floor(coord.x /32)).intValue(), ((Double)Math.floor(coord.y /32)).intValue(), ((Double)Math.floor(coord.z /32)).intValue()));
+						if (cnk != null) {
+							cnk.event().addListener(player.blockListener);
+							cnk.event().addListener(player.objectListener);
+						}
 					}
 				}
 			}
@@ -219,8 +224,11 @@ class PlayerPartWorldListener implements IEventListener {
 			for (int i=-5; i<=5; i++) {
 				for (int j=-5; j<=5; j++) {
 					for (int k=-5; k<=5; k++) {
-						player.getChunk().event().removeListener(player.blockListener);
-						player.getChunk().event().removeListener(player.objectListener);
+						EntityChunk cnk = player.getWorld().getChunkByCoord(player.getCoord());
+						if (cnk != null) {
+							cnk.event().removeListener(player.blockListener);
+							cnk.event().removeListener(player.objectListener);
+						}
 					}
 				}
 			}

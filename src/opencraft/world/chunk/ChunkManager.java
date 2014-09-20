@@ -51,12 +51,13 @@ public class ChunkManager implements ITickable {
 		if (this.chunks.get(address) == null) {
 			File chunkFile = new File(new File(OpenCraft.worldDir, world.getName()), address.toString());
 			if (!chunkFile.exists()) {
-				EntityChunk chunk = ((EventGenerateChunk)world.event().emit(new EventGenerateChunk(new EntityChunk(world.getId(), address)))).chunk;
+				EntityChunk chunk = ((EventGenerateChunk)world.event().emit(new EventGenerateChunk(new EntityChunk(world.getName(), address)))).chunk;
 				chunk = ((EventDecorateChunk)world.event().emit(new EventDecorateChunk(chunk))).chunk;
 				this.chunks.put(address, chunk);
 			} else {
 				this.chunks.put(address, EntityLoader.loadEntity(chunkFile));
 			}
+			OpenCraftServer.instance().getTickManager().addTick((EntityChunk)this.chunks.get(address));
 		}
 		return (EntityChunk) this.chunks.get(address);
 	}
@@ -82,6 +83,7 @@ public class ChunkManager implements ITickable {
 				e.printStackTrace();
 			}
 			this.chunks.removeValue(chunk);
+			OpenCraft.log.debug("A chunk is unloaded");
 		}
 		for (IEntity newChunk : newChunks) {
 			EntityChunk chunk;
@@ -94,7 +96,9 @@ public class ChunkManager implements ITickable {
 				chunk = event2.chunk;
 			}
 			this.chunks.put(chunk.address, chunk);
+			
 			OpenCraftServer.instance().getTickManager().addTick(chunk);
+			OpenCraft.log.debug("A chunk is loaded");
 			chunk.event().emit(new EventLoadChunk());
 		}
 		

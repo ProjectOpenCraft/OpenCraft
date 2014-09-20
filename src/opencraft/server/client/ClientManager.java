@@ -45,6 +45,7 @@ public class ClientManager extends Thread {
 	Map<String, Client> mapClient = new HashMap<String, Client>();
 	
 	public ClientManager(int port) {
+		this.setName("ClientManager");
 		this.log = OpenCraft.log;
 		log.info("Starting ClientManager");
 		this.port = port;

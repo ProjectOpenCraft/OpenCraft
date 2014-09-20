@@ -23,6 +23,7 @@ public class TickTimer extends Thread {
 	boolean isRunning = true;
 	
 	public TickTimer(int tickTime, ICallable callback) {
+		this.setName("TickTimer");
 		this.tickTime = tickTime;
 		this.callback = callback;
 	}

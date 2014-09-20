@@ -57,11 +57,10 @@ public class OpenCraft {
 	public static final File worldDir = new File(runDir, "worlds");
 	public static final File playerDir = new File(worldDir, "players");
 	
-	public static Logger log;
+	public static Logger log = LogManager.getLogger("[OpenCraft]");
 	
 	public static void main(String[] args) {
 		BasicConfigurator.configure();
-		log = LogManager.getLogger("[OpenCraft]");
 		createDir();
 		registerBlock();
 		registerEntity();

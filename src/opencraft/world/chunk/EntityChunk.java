@@ -19,6 +19,7 @@ import java.util.Random;
 
 import org.json.simple.JSONObject;
 
+import opencraft.OpenCraft;
 import opencraft.event.world.chunk.EventBlockChanged;
 import opencraft.event.world.chunk.EventLoadChunk;
 import opencraft.event.world.chunk.EventUnloadChunk;
@@ -124,6 +125,10 @@ public class EntityChunk extends Entity implements ITickable {
 		return encode(this.block);
 	}
 	
+	public EntityStorageList getObjectList() {
+		return this.entityObjects;
+	}
+	
 	public static String encode(char[][][] block) {
 		StringBuilder sb = new StringBuilder();
 		for (int i=0;i<block.length;i++) {
@@ -152,13 +157,14 @@ public class EntityChunk extends Entity implements ITickable {
 
 	@Override
 	public void tick() {
+		OpenCraft.log.info("Chunk is ticking");
 		Random ran = new Random();
 		int x = ran.nextInt(32);
 		int y = ran.nextInt(32);
 		int z = ran.nextInt(32);
 		IBlock b = Block.registry.getBlock(this.block[x][y][z]);
 		IBlock nb = b.onChunkTick(OpenCraftServer.instance().getWorldManager().getWorld(world), x + (this.address.x * 32), y + (this.address.y * 32), z + (this.address.z * 32));
-		event().emit(new PacketUpdateBlock(getBlockCoord(new IntXYZ(x, y, z)), Block.registry.getCode(nb)));
+		if (b != nb) event().emit(new PacketUpdateBlock(getBlockCoord(new IntXYZ(x, y, z)), Block.registry.getCode(nb)));
 	}
 	
 	class EventListenerOnChunkLoad implements IEventListener {

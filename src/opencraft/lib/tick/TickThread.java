@@ -35,7 +35,11 @@ public class TickThread extends Thread {
 				this.isWorking = false;
 				manager.doneWork();
 			} else {
-				curWork.tick();
+				try {
+					curWork.tick();
+				} catch(Throwable e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}
