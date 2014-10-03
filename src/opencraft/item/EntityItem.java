@@ -15,11 +15,22 @@
 
 package opencraft.item;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 import opencraft.lib.INamed;
 import opencraft.lib.entity.Entity;
 
 public abstract class EntityItem extends Entity implements INamed {
 	
+	public List<String> tags = new ArrayList<String>();
 	
-	public abstract int getDamage();
+	public Collection<String> getTags() {
+		return this.tags;
+	}
+
+	public int getAttackDamage() {
+		return 1;
+	}
 }

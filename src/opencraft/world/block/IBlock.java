@@ -25,7 +25,7 @@ public interface IBlock extends INamed {
 	 */
 	String getId();
 	IBlock onChunkTick(EntityWorld world, int x, int y, int z);
-	boolean isFullCube();
+	boolean isAir();
 	boolean isTransparent();
 	boolean isFluid();
 	boolean isReplaceable();

@@ -25,8 +25,8 @@ public abstract class Block implements IBlock {
 		return this;
 	}
 	
-	public boolean isFullCube() {
-		return true;
+	public boolean isAir() {
+		return false;
 	}
 	
 	public boolean isTransparent() {

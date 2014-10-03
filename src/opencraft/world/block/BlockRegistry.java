@@ -31,6 +31,7 @@ public class BlockRegistry extends Entity {
 	}
 	
 	private Map<Character, String> charMap;
+	private char lastChar = 0;
 	private Map<String, Character> revCharMap;
 	private Map<String, IBlock> blockMap;
 	
@@ -46,10 +47,19 @@ public class BlockRegistry extends Entity {
 		if (this.charMap.values().contains(block.getId()) || this.revCharMap.keySet().contains(block.getId())) {
 			return;
 		} else {
-			char simbol = (char) Math.min(this.charMap.size(), this.revCharMap.size());
+			char simbol = newSymbol();
 			this.charMap.put(simbol, block.getId());
 			this.revCharMap.put(block.getId(), simbol);
 		}
+	}
+	
+	public char newSymbol() {
+		char next = (char) (this.lastChar +1);
+		while (next == '{' || next == '}' || next == '"' || next == '[' || next == ']' || next == '@') {
+			next += 1;
+		}
+		this.lastChar = next;
+		return next;
 	}
 	
 	public IBlock getBlock(char symbol) {

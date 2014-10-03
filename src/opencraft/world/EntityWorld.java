@@ -15,19 +15,16 @@
 
 package opencraft.world;
 
-import opencraft.event.object.EventObjectSpawn;
 import opencraft.lib.INamed;
 import opencraft.lib.entity.Entity;
 import opencraft.lib.entity.data.DoubleXYZ;
 import opencraft.lib.entity.data.IntXYZ;
-import opencraft.lib.event.IEvent;
-import opencraft.lib.event.IEventListener;
 import opencraft.lib.tick.ITickable;
 import opencraft.server.OpenCraftServer;
 import opencraft.world.block.IBlock;
+import opencraft.world.chunk.ChunkAddress;
 import opencraft.world.chunk.ChunkManager;
 import opencraft.world.chunk.EntityChunk;
-import opencraft.world.object.living.player.Player;
 
 public abstract class EntityWorld extends Entity implements ITickable, INamed {
 	
@@ -37,23 +34,13 @@ public abstract class EntityWorld extends Entity implements ITickable, INamed {
 	
 	public EntityWorld() {
 		OpenCraftServer.instance().getTickManager().addTick(chunkManager);
-		event().addListener(new IEventListener() {
-
-			@Override
-			public Class<? extends IEvent> getEventClass() {
-				return EventObjectSpawn.class;
-			}
-
-			@Override
-			public IEvent handleEvent(IEvent event) {
-				EventObjectSpawn e = (EventObjectSpawn) event;
-				if (e.obj instanceof Player) {
-					
-				}
-				return e;
-			}
-			
-		});
+	}
+	
+	public IntXYZ getSurface(IntXYZ coord) {
+		while(!getBlock(coord).isAir()) {
+			coord = new IntXYZ(coord.x, coord.y +1, coord.z);
+		}
+		return coord;
 	}
 	
 	public ChunkManager getChunkManager() {
@@ -66,7 +53,7 @@ public abstract class EntityWorld extends Entity implements ITickable, INamed {
 	public IBlock getBlock(IntXYZ coord) {
 		IntXYZ chunkCoord = new IntXYZ(coord.x/32, coord.y/32, coord.z/32);
 		IntXYZ blockCoord = new IntXYZ(coord.x%32, coord.y%32, coord.z%32);
-		EntityChunk chunk = this.chunkManager.getChunk(chunkCoord);
+		EntityChunk chunk = this.chunkManager.getChunk(new ChunkAddress(this.getName(), chunkCoord));
 		if (chunk == null) return null;
 		return chunk.getBlock(blockCoord);
 	}
@@ -74,16 +61,16 @@ public abstract class EntityWorld extends Entity implements ITickable, INamed {
 	public boolean setBlock(IBlock block, IntXYZ coord) {
 		IntXYZ chunkCoord = new IntXYZ(coord.x/32, coord.y/32, coord.z/32);
 		IntXYZ blockCoord = new IntXYZ(coord.x%32, coord.y%32, coord.z%32);
-		EntityChunk chunk = this.chunkManager.getChunk(chunkCoord);
+		EntityChunk chunk = this.chunkManager.getChunk(new ChunkAddress(this.getName(), chunkCoord));
 		if (chunk == null) return false;
 		return chunk.setBlock(block, blockCoord);
 	}
 	
 	public EntityChunk getChunkByCoord(IntXYZ coord) {
-		return this.chunkManager.getChunk(new IntXYZ(coord.x /32, coord.y /32, coord.z /32));
+		return this.chunkManager.getChunk(new ChunkAddress(this.getName(), new IntXYZ(coord.x /32, coord.y /32, coord.z /32)));
 	}
 	
 	public EntityChunk getChunkByCoord(DoubleXYZ coord) {
-		return this.chunkManager.getChunk(new IntXYZ(((Double)Math.floor(coord.x /32)).intValue(), ((Double)Math.floor(coord.y /32)).intValue(), ((Double)Math.floor(coord.z /32)).intValue()));
+		return this.chunkManager.getChunk(new ChunkAddress(this.getName(), new IntXYZ(((Double)Math.floor(coord.x /32)).intValue(), ((Double)Math.floor(coord.y /32)).intValue(), ((Double)Math.floor(coord.z /32)).intValue())));
 	}
 }

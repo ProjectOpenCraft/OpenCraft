@@ -28,7 +28,10 @@ import org.apache.log4j.Logger;
 import opencraft.OpenCraft;
 import opencraft.event.object.living.player.EventPlayerPartWorld;
 import opencraft.lib.entity.file.EntityLoader;
+import opencraft.lib.event.EventDispatcher;
 import opencraft.lib.event.IEvent;
+import opencraft.lib.event.IEventDispatcher;
+import opencraft.lib.event.IEventHandler;
 import opencraft.lib.event.IEventListener;
 import opencraft.lib.event.packet.Packet;
 import opencraft.packet.c2s.PacketClientInfo;
@@ -36,9 +39,10 @@ import opencraft.server.OpenCraftServer;
 import opencraft.world.EntityWorld;
 import opencraft.world.object.living.player.Player;
 
-public class ClientManager extends Thread {
+public class ClientManager extends Thread implements IEventHandler {
 	
 	Logger log;
+	IEventDispatcher ed = new EventDispatcher();
 	
 	private int port;
 	List<Client> clientPool = new LinkedList<Client>();
@@ -49,6 +53,10 @@ public class ClientManager extends Thread {
 		this.log = OpenCraft.log;
 		log.info("Starting ClientManager");
 		this.port = port;
+	}
+	
+	public IEventDispatcher event() {
+		return this.ed;
 	}
 	
 	Player getPlayer(ClientInfo info) {

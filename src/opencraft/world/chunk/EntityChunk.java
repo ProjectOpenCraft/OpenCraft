@@ -42,8 +42,7 @@ import opencraft.world.object.EntityObject;
 
 public class EntityChunk extends Entity implements ITickable {
 	
-	String world = "";
-	IntXYZ address = new IntXYZ();
+	ChunkAddress address = new ChunkAddress("", new IntXYZ());
 	char[][][] block = new char[32][32][32];
 	EntityStorageIntXYZ entityBlocks = new EntityStorageIntXYZ();
 	EntityStorageList entityObjects = new EntityStorageList();
@@ -54,17 +53,20 @@ public class EntityChunk extends Entity implements ITickable {
 		event().addListener(new EventListenerOnChunkUnload(this, entityBlocks, entityObjects));
 	}
 	
-	public EntityChunk(String world, IntXYZ address) {
+	public EntityChunk(ChunkAddress address) {
 		this();
-		this.world = world;
 		this.address = address;
 	}
 	
 	public IntXYZ getBlockCoord(IntXYZ chunkCoord) {
-		int x = this.address.x * 32 + chunkCoord.x;
-		int y = this.address.y * 32 + chunkCoord.y;
-		int z = this.address.z * 32 + chunkCoord.z;
+		int x = this.address.coord.x * 32 + chunkCoord.x;
+		int y = this.address.coord.y * 32 + chunkCoord.y;
+		int z = this.address.coord.z * 32 + chunkCoord.z;
 		return new IntXYZ(x, y, z);
+	}
+	
+	public ChunkAddress getAddress() {
+		return this.address;
 	}
 	
 	public IBlock getBlock(IntXYZ coord) {
@@ -86,10 +88,6 @@ public class EntityChunk extends Entity implements ITickable {
 		return true;
 	}
 	
-	public IntXYZ getAddress() {
-		return this.address;
-	}
-	
 	public void addObject(EntityObject obj) {
 		this.entityObjects.add(obj);
 	}
@@ -102,8 +100,8 @@ public class EntityChunk extends Entity implements ITickable {
 	@SuppressWarnings("unchecked")
 	public JSONObject toJSON(JSONObject json) {
 		super.toJSON(json);
-		json.put("world", world);
-		json.put("address", address.toJSON(new JSONObject()));
+		json.put("world", address.world);
+		json.put("coord", address.coord.toJSON(new JSONObject()));
 		json.put("block", encode(block));
 		json.put("entityBlock", entityBlocks.toJSON(new JSONObject()));
 		json.put("entityObject", entityObjects.toJSON(new JSONObject()));
@@ -113,8 +111,8 @@ public class EntityChunk extends Entity implements ITickable {
 	@Override
 	public IEntity fromJSON(JSONObject json) {
 		super.fromJSON(json);
-		this.world = (String) json.get("world");
-		this.address = (IntXYZ) Entity.registry.getEntity((JSONObject) json.get("address"));
+		IntXYZ coord = (IntXYZ) Entity.registry.getEntity((JSONObject) json.get("coord"));
+		this.address = new ChunkAddress((String) json.get("world"), coord);
 		this.block = decode((String) json.get("block"));
 		this.entityBlocks = (EntityStorageIntXYZ) Entity.registry.getEntity((JSONObject) json.get("entityBlock"));
 		this.entityObjects = (EntityStorageList) Entity.registry.getEntity((JSONObject) json.get("entityObject"));
@@ -163,7 +161,7 @@ public class EntityChunk extends Entity implements ITickable {
 		int y = ran.nextInt(32);
 		int z = ran.nextInt(32);
 		IBlock b = Block.registry.getBlock(this.block[x][y][z]);
-		IBlock nb = b.onChunkTick(OpenCraftServer.instance().getWorldManager().getWorld(world), x + (this.address.x * 32), y + (this.address.y * 32), z + (this.address.z * 32));
+		IBlock nb = b.onChunkTick(OpenCraftServer.instance().getWorldManager().getWorld(this.address.world), x + (this.address.coord.x * 32), y + (this.address.coord.y * 32), z + (this.address.coord.z * 32));
 		if (b != nb) event().emit(new PacketUpdateBlock(getBlockCoord(new IntXYZ(x, y, z)), Block.registry.getCode(nb)));
 	}
 	

@@ -20,10 +20,20 @@ import java.io.File;
 import opencraft.OpenCraft;
 import opencraft.lib.entity.storage.EntityStorageString;
 import opencraft.server.OpenCraftServer;
+import opencraft.world.chunk.ChunkLoadManager;
 
 public class WorldManager {
 	
 	private EntityStorageString worlds = new EntityStorageString();
+	private ChunkLoadManager chunkLoadManager;
+	
+	public WorldManager(int chunkLoadPerTick, double chunkSaveDelay) {
+		this.chunkLoadManager = new ChunkLoadManager(chunkLoadPerTick, chunkSaveDelay);
+	}
+	
+	public ChunkLoadManager getChunkLoadManager() {
+		return this.chunkLoadManager;
+	}
 	
 	public EntityWorld getWorld() {
 		if (worlds.values().size() < 1) return null;

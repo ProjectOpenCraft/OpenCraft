@@ -17,6 +17,7 @@ public class ClassLoader {
 			@SuppressWarnings("resource")
 			JarFile jarFile = new JarFile(jar);
 			Enumeration<JarEntry> entries = jarFile.entries();
+			IMod mainClass = null;
 			while (entries.hasMoreElements()) {
 				JarEntry element = entries.nextElement();
 				if (element.getName().endsWith(".class")) {
@@ -25,13 +26,13 @@ public class ClassLoader {
 					try {
 						Object obj = clazz.newInstance();
 						if (obj instanceof IMod) {
-						return (IMod) obj;
+						mainClass = (IMod) obj;
 						}
 					} catch (InstantiationException e) {
 					}
-					
 				}
 			}
+			return mainClass;
 		} catch(MalformedURLException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

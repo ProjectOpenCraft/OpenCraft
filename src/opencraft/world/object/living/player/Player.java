@@ -33,6 +33,7 @@ import opencraft.packet.s2c.PacketUpdateObject;
 import opencraft.server.client.Client;
 import opencraft.server.client.ClientInfo;
 import opencraft.world.block.IBlockInteractor;
+import opencraft.world.chunk.ChunkAddress;
 import opencraft.world.chunk.EntityChunk;
 import opencraft.world.object.living.EntityObjectLiving;
 import opencraft.world.object.living.IAttacker;
@@ -42,8 +43,7 @@ public class Player extends EntityObjectLiving implements IBlockInteractor, IAtt
 	private ClientInfo info;
 	private Client client;
 	
-	private String prvWorld;
-	private IntXYZ prvChunk;
+	private ChunkAddress prvAddress;
 	
 	public IEventListener blockListener;
 	public IEventListener objectListener;
@@ -86,8 +86,9 @@ public class Player extends EntityObjectLiving implements IBlockInteractor, IAtt
 	public IEntity fromJSON(JSONObject json) {
 		super.fromJSON(json);
 		this.info = (ClientInfo) Entity.registry.getEntity((JSONObject) json.get("info"));
-		this.prvWorld = (String) json.get("world");
-		this.prvChunk = (IntXYZ) Entity.registry.getEntity((JSONObject) json.get("chunk"));
+		String world = (String) json.get("world");
+		IntXYZ chunk = (IntXYZ) Entity.registry.getEntity((JSONObject) json.get("chunk"));
+		this.prvAddress = new ChunkAddress(world, chunk);
 		return this;
 	}
 	
@@ -103,7 +104,7 @@ public class Player extends EntityObjectLiving implements IBlockInteractor, IAtt
 
 	@Override
 	public int getAttackDamage(EntityObjectLiving target, EntityItem weapon) {
-		EventOnAttack event = (EventOnAttack) event().emit(new EventOnAttack(this, weapon, target, weapon.getDamage()));
+		EventOnAttack event = (EventOnAttack) event().emit(new EventOnAttack(this, weapon, target, weapon.getAttackDamage()));
 		return event.damage;
 	}
 
@@ -112,14 +113,15 @@ public class Player extends EntityObjectLiving implements IBlockInteractor, IAtt
 		for (int i=-5; i<=5; i++) {
 			for (int j=-5; j<=5; j++) {
 				for (int k=-5; k<=5; k++) {
-					getWorld().chunkManager.loadChunk(new IntXYZ(((Double)(getCoord().x /32d)).intValue() +i, ((Double)(getCoord().y /32d)).intValue() +j, ((Double)(getCoord().z /32d)).intValue() +k));
-					if (!(this.world == this.prvWorld && this.getChunk().getAddress().equals(this.prvChunk))) {
-						if (this.prvChunk.x +i < this.getChunk().getAddress().x -5 || this.prvChunk.x +i > this.getChunk().getAddress().x +5 || this.prvChunk.y +j < this.getChunk().getAddress().y -5 || this.prvChunk.y +j > this.getChunk().getAddress().y +5 || this.prvChunk.z +k < this.getChunk().getAddress().z -5 || this.prvChunk.z +k > this.getChunk().getAddress().z +5) {
-							getWorld().getChunkManager().getChunk(new IntXYZ(prvChunk.x +i, prvChunk.y +j, prvChunk.z +k)).event().removeListener(this.blockListener);
-							getWorld().getChunkManager().getChunk(new IntXYZ(prvChunk.x +i, prvChunk.y +j, prvChunk.z +k)).event().removeListener(this.objectListener);
+					getWorld().chunkManager.loadChunk(new ChunkAddress(this.world, new IntXYZ(((Double)(getCoord().x /32d)).intValue() +i, ((Double)(getCoord().y /32d)).intValue() +j, ((Double)(getCoord().z /32d)).intValue() +k)));
+					if (!(this.world == this.prvAddress.world && this.getChunk().getAddress().equals(this.prvAddress))) {
+						if (this.prvAddress.coord.x +i < this.getChunk().getAddress().coord.x -5 || this.prvAddress.coord.x +i > this.getChunk().getAddress().coord.x +5 || this.prvAddress.coord.y +j < this.getChunk().getAddress().coord.y -5 || this.prvAddress.coord.y +j > this.getChunk().getAddress().coord.y +5 || this.prvAddress.coord.z +k < this.getChunk().getAddress().coord.z -5 || this.prvAddress.coord.z +k > this.getChunk().getAddress().coord.z +5) {
+							EntityChunk oldChunk = getWorld().getChunkManager().getChunk(new ChunkAddress(this.prvAddress.world, new IntXYZ(this.prvAddress.coord.x +i, this.prvAddress.coord.y +j, this.prvAddress.coord.z +k)));
+							oldChunk.event().removeListener(this.blockListener);
+							oldChunk.event().removeListener(this.objectListener);
 						}
-						if (this.getChunk().getAddress().x +i < this.prvChunk.x -5 || this.getChunk().getAddress().x +i > this.prvChunk.x +5 || this.getChunk().getAddress().y +j < this.prvChunk.y -5 || this.getChunk().getAddress().y +j > this.prvChunk.y +5 || this.getChunk().getAddress().z +k < this.prvChunk.z -5 || this.getChunk().getAddress().z +k > this.prvChunk.z +5) {
-							EntityChunk newChunk = getWorld().getChunkManager().getChunk(new IntXYZ(getChunk().getAddress().x +i, getChunk().getAddress().y +j, getChunk().getAddress().z +k));
+						if (this.getChunk().getAddress().coord.x +i < this.prvAddress.coord.x -5 || this.getChunk().getAddress().coord.x +i > this.prvAddress.coord.x +5 || this.getChunk().getAddress().coord.y +j < this.prvAddress.coord.y -5 || this.getChunk().getAddress().coord.y +j > this.prvAddress.coord.y +5 || this.getChunk().getAddress().coord.z +k < this.prvAddress.coord.z -5 || this.getChunk().getAddress().coord.z +k > this.prvAddress.coord.z +5) {
+							EntityChunk newChunk = getWorld().getChunkManager().getChunk(new ChunkAddress(this.prvAddress.world, new IntXYZ(getChunk().getAddress().coord.x +i, getChunk().getAddress().coord.y +j, getChunk().getAddress().coord.z +k)));
 							newChunk.event().addListener(this.blockListener);
 							newChunk.event().addListener(this.objectListener);
 							this.client.sender().emit(new PacketFullChunk(newChunk.getChunkBlockData(), newChunk.getObjectList()));
@@ -193,8 +195,8 @@ public class Player extends EntityObjectLiving implements IBlockInteractor, IAtt
 			for (int i=-5; i<=5; i++) {
 				for (int j=-5; j<=5; j++) {
 					for (int k=-5; k<=5; k++) {
-						player.getWorld().getChunkManager().loadChunk(new IntXYZ(((Double)Math.floor(coord.x /32)).intValue(), ((Double)Math.floor(coord.y /32)).intValue(), ((Double)Math.floor(coord.z /32)).intValue()));
-						EntityChunk cnk = player.getWorld().getChunkManager().forceLoadChunk(new IntXYZ(((Double)Math.floor(coord.x /32)).intValue(), ((Double)Math.floor(coord.y /32)).intValue(), ((Double)Math.floor(coord.z /32)).intValue()));
+						player.getWorld().getChunkManager().loadChunk(new ChunkAddress(player.world, new IntXYZ(((Double)Math.floor(coord.x /32)).intValue(), ((Double)Math.floor(coord.y /32)).intValue(), ((Double)Math.floor(coord.z /32)).intValue())));
+						EntityChunk cnk = player.getWorld().getChunkManager().forceLoadChunk(new ChunkAddress(player.world, new IntXYZ(((Double)Math.floor(coord.x /32)).intValue(), ((Double)Math.floor(coord.y /32)).intValue(), ((Double)Math.floor(coord.z /32)).intValue())));
 						if (cnk != null) {
 							cnk.event().addListener(player.blockListener);
 							cnk.event().addListener(player.objectListener);

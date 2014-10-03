@@ -22,6 +22,8 @@ import java.net.Socket;
 import org.apache.log4j.Logger;
 
 import opencraft.OpenCraft;
+import opencraft.event.network.EventClientJoinServer;
+import opencraft.event.network.EventClientPartServer;
 import opencraft.event.object.EventObjectDespawn;
 import opencraft.event.object.EventObjectSpawn;
 import opencraft.event.object.living.player.EventPlayerJoinWorld;
@@ -38,6 +40,7 @@ import opencraft.packet.c2s.PacketKeyInput;
 import opencraft.packet.c2s.PacketPartServer;
 import opencraft.packet.c2s.PacketPlayerSight;
 import opencraft.server.OpenCraftServer;
+import opencraft.world.chunk.ChunkAddress;
 import opencraft.world.object.living.player.Player;
 
 public class Client implements INamed {
@@ -77,10 +80,12 @@ public class Client implements INamed {
 		if (this.player == null) return;
 		player.setClient(this);
 		
-		IntXYZ chunkAddr = new IntXYZ(((Double)player.getCoord().x).intValue(), ((Double)player.getCoord().y).intValue(), ((Double)player.getCoord().z).intValue());
+		ChunkAddress chunkAddr = new ChunkAddress(this.getName(), new IntXYZ(((Double)Math.floor(player.getCoord().x /32)).intValue(), ((Double)Math.floor(player.getCoord().y /32)).intValue(), ((Double)Math.floor(player.getCoord().z /32)).intValue()));
 		
 		manager.mapClient.put(info.name, this);
 		manager.clientPool.remove(this);
+		
+		manager.event().emit(new EventClientJoinServer(this));
 		
 		OpenCraftServer.instance().getTickManager().addTick(player);
 		player = (Player) ((EventObjectSpawn) player.getWorld().event().emit(new EventObjectSpawn(player))).obj;
@@ -99,6 +104,9 @@ public class Client implements INamed {
 		player.getChunk().removeObject(player);
 		player.getWorld().event().emit(new EventObjectDespawn(player));
 		OpenCraftServer.instance().getTickManager().removeTick(player);
+		
+		manager.event().emit(new EventClientPartServer(this));
+		
 		try {
 			EntityLoader.saveEntity(player, new File(OpenCraft.playerDir, player.getUUID()));
 			log.info("Saved player informations");
