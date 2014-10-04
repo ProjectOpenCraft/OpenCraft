@@ -22,6 +22,7 @@ import java.util.Map;
 import opencraft.lib.event.EventDispatcher;
 import opencraft.lib.event.IEventDispatcher;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 public abstract class Entity implements IEntity {
@@ -50,12 +51,24 @@ public abstract class Entity implements IEntity {
 	@SuppressWarnings("unchecked")
 	public JSONObject toJSON(JSONObject json) {
 		json.put(EntityRegistry.ENTITY_ID, getId());
+		JSONArray subntt = new JSONArray();
+		for (IEntity ntt : this.mapSubEntity.values()) {
+			subntt.add(ntt.toJSON(new JSONObject()));
+		}
+		json.put("subntt", subntt);
 		return json;
 	}
 	
 	@Override
 	public IEntity fromJSON(JSONObject json) {
 		json.remove(EntityRegistry.ENTITY_ID);
+		JSONArray subntt = (JSONArray) json.get("subntt");
+		for (Object jsonntt : subntt) {
+			JSONObject ntt = (JSONObject) jsonntt;
+			IEntity entity = Entity.registry.getEntity(ntt);
+			this.mapSubEntity.put(entity.getClass(), entity);
+		}
+		json.remove("subntt");
 		return this;
 	}
 }

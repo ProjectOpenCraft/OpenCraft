@@ -1,10 +1,10 @@
 package opencraft.mod;
 
+import opencraft.lib.INamed;
 import opencraft.lib.event.IEventHandler;
 
-public interface IMod extends IEventHandler {
+public interface IMod extends IEventHandler, INamed {
 	
-	String getName();
 	int getVersion();
 	void init();
 }

@@ -15,6 +15,15 @@
 
 package opencraft.event.mod;
 
-public class EventReceiveModMessage {
+import opencraft.lib.event.IEvent;
 
+public class EventReceiveModMessage implements IEvent {
+	
+	public String name;
+	public Object cargo;
+	
+	public EventReceiveModMessage(String name, Object cargo) {
+		this.name = name;
+		this.cargo = cargo;
+	}
 }

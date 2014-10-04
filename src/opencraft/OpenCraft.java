@@ -23,8 +23,10 @@ import org.apache.log4j.Logger;
 
 import opencraft.lib.entity.Entity;
 import opencraft.lib.entity.data.Box;
+import opencraft.lib.entity.data.DoubleXY;
 import opencraft.lib.entity.data.DoubleXYZ;
 import opencraft.lib.entity.data.IntXYZ;
+import opencraft.lib.entity.storage.EntityStorageArray;
 import opencraft.lib.entity.storage.EntityStorageIntXYZ;
 import opencraft.lib.entity.storage.EntityStorageList;
 import opencraft.lib.entity.storage.EntityStorageString;
@@ -73,9 +75,11 @@ public class OpenCraft {
 	
 	private static void registerEntity() {
 		Entity.registry.registerEntity(new IntXYZ());
+		Entity.registry.registerEntity(new DoubleXY());
 		Entity.registry.registerEntity(new DoubleXYZ());
 		Entity.registry.registerEntity(new Box());
 		
+		Entity.registry.registerEntity(new EntityStorageArray());
 		Entity.registry.registerEntity(new EntityStorageString());
 		Entity.registry.registerEntity(new EntityStorageList());
 		Entity.registry.registerEntity(new EntityStorageIntXYZ());
@@ -100,6 +104,11 @@ public class OpenCraft {
 		Entity.registry.registerEntity(new PacketUpdateBlock());
 		Entity.registry.registerEntity(new PacketUpdateObject());
 		Entity.registry.registerEntity(new PacketYouDied());
+		
+		Entity.registry.registerEntity(new EntityChunk());
+		Entity.registry.registerEntity(new EntityObjectItem());
+		
+		Entity.registry.registerEntity(new Player());
 	}
 	
 	private static void createDir() {
