@@ -1,9 +1,3 @@
-/*
- *OpenCraft - Build your own open world!
- *
- *Author : HyeonuPark(Moonrise1275)
- *
- *--------------------------------------------------------------------------
  *
  *The MIT License (MIT)
  *
@@ -27,34 +21,3 @@
  *OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *THE SOFTWARE.
  *
- */
-
-
-package opencraft.world.block;
-
-import opencraft.world.EntityWorld;
-
-public abstract class Block implements IBlock {
-	
-	public static BlockRegistry registry = new BlockRegistry();
-	
-	public IBlock onChunkTick(EntityWorld world, int x, int y, int z) {
-		return this;
-	}
-	
-	public boolean isAir() {
-		return false;
-	}
-	
-	public boolean isTransparent() {
-		return false;
-	}
-	
-	public boolean isReplaceable() {
-		return false;
-	}
-	
-	public boolean isFluid() {
-		return false;
-	}
-}
