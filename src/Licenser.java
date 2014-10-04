@@ -7,8 +7,6 @@
  *
  *The MIT License (MIT)
  *
- *Copyright (c) <year> <copyright holders>
- *
  *Permission is hereby granted, free of charge, to any person obtaining a copy
  *of this software and associated documentation files (the "Software"), to deal
  *in the Software without restriction, including without limitation the rights
@@ -28,8 +26,6 @@
  *THE SOFTWARE.
  *
  */
-
-
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -59,6 +55,7 @@ public class Licenser {
 				allFile(file, license, author);
 			} else if (file.getName().endsWith(".java")) {
 				process(file, license, author);
+				//delete(file);
 			}
 		}
 	}
@@ -98,6 +95,36 @@ public class Licenser {
 			if (line == null) break;
 			writer.println(line);
 		}
+		reader.close();
+		writer.close();
+		file.delete();
+		tmp.renameTo(file);
+		
+		System.out.println("done - " + file.getName());
+	}
+	
+	public static void delete(File file) throws IOException {
+		BufferedReader reader = new BufferedReader(new FileReader(file));
+		
+		File tmp = new File(file.getAbsolutePath() + ".tmp");
+		tmp.createNewFile();
+		PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(tmp)));
+		
+		while (true) {
+			String line = reader.readLine();
+			if (line == null) break;
+			if (!(line.startsWith("/*") || line.startsWith(" *") || line.startsWith("*/") || line.isEmpty())) {
+				writer.println(line);
+				break;
+			};
+		}
+		
+		while (true) {
+			String line = reader.readLine();
+			if (line == null) break;
+			writer.println(line);
+		}
+		
 		reader.close();
 		writer.close();
 		file.delete();
