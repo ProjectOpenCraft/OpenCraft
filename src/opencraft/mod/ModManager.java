@@ -43,6 +43,7 @@ import opencraft.event.mod.EventPostLoadMod;
 import opencraft.event.mod.EventPreLoadMod;
 import opencraft.event.mod.EventReceiveModMessage;
 import opencraft.event.mod.EventSendModMessage;
+import opencraft.lib.event.EnumEventOrder;
 import opencraft.lib.event.EventDispatcher;
 import opencraft.lib.event.IEvent;
 import opencraft.lib.event.IEventDispatcher;
@@ -125,6 +126,11 @@ public class ModManager implements IEventHandler {
 			EventSendModMessage e = (EventSendModMessage) event;
 			this.listMod.get(e.target).event().emit(new EventReceiveModMessage(e.name, e.cargo));
 			return e;
+		}
+
+		@Override
+		public EnumEventOrder getOrder() {
+			return EnumEventOrder.lowest;
 		}
 	}
 }

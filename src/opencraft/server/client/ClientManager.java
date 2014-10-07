@@ -42,6 +42,7 @@ import org.apache.log4j.Logger;
 import opencraft.OpenCraft;
 import opencraft.event.object.living.player.EventPlayerPartWorld;
 import opencraft.lib.entity.file.EntityLoader;
+import opencraft.lib.event.EnumEventOrder;
 import opencraft.lib.event.EventDispatcher;
 import opencraft.lib.event.IEvent;
 import opencraft.lib.event.IEventDispatcher;
@@ -138,6 +139,11 @@ public class ClientManager extends Thread implements IEventHandler {
 			client.setInfo(packet.info);
 			client.join();
 			return event;
+		}
+
+		@Override
+		public EnumEventOrder getOrder() {
+			return EnumEventOrder.lowest;
 		}
 	}
 }

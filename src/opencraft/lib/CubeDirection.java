@@ -27,11 +27,32 @@
  *
  */
 
-package opencraft.world.block;
+package opencraft.lib;
 
-import opencraft.lib.INamed;
+import opencraft.lib.entity.data.IntXYZ;
 
-public interface IBlockInteractor extends INamed {
+public enum CubeDirection {
 	
+	top(0, 1, 0), bottom(0, -1, 0), north(0, 0, -1), south(0, 0, 1), east(0, 0, 1), west(0, 0, -1), undefined(0, 0, 0);
 	
+	public static final int[] opposits = { 1, 0, 3, 2, 5, 4 };
+	public static final int[] rotates  = { 1, 2, 3, 4, 5, 0 };
+	
+	public static IntXYZ getNextBlock(IntXYZ coord, CubeDirection side) {
+		return coord.add(side.vector);
+	}
+	
+	public final IntXYZ vector;
+	
+	CubeDirection(int x, int y, int z) {
+		this.vector = new IntXYZ(x, y, z);
+	}
+	
+	public CubeDirection getOpposit() {
+		return CubeDirection.values()[opposits[this.ordinal()]];
+	}
+	
+	public CubeDirection getRotate() {
+		return CubeDirection.values()[rotates[this.ordinal()]];
+	}
 }

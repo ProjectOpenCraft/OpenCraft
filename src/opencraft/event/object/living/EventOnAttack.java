@@ -33,22 +33,25 @@ import opencraft.event.ICancelable;
 import opencraft.item.EntityItem;
 import opencraft.lib.event.IEvent;
 import opencraft.world.object.living.EntityObjectLiving;
-import opencraft.world.object.living.player.Player;
+import opencraft.world.object.living.IAttacker;
+import opencraft.world.object.living.IDamageType;
 
 public class EventOnAttack implements IEvent, ICancelable {
 	
 	private boolean isCanceled = false;
 	
-	public final Player player;
+	public final IAttacker attacker;
 	public final EntityItem weapon;
 	public final EntityObjectLiving target;
 	public int damage;
+	public IDamageType type;
 	
-	public EventOnAttack(Player player, EntityItem weapon, EntityObjectLiving target, int damage) {
-		this.player = player;
+	public EventOnAttack(IAttacker attacker, EntityItem weapon, EntityObjectLiving target, int damage, IDamageType type) {
+		this.attacker = attacker;
 		this.weapon = weapon;
 		this.target = target;
 		this.damage = damage;
+		this.type = type;
 	}
 
 	@Override

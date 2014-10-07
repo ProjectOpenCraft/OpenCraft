@@ -122,4 +122,20 @@ public class DoubleXYZ extends Entity {
 	public String getId() {
 		return "data|OpenCraft|doubleXYZ";
 	}
+	
+	public DoubleXYZ add(DoubleXYZ adder) {
+		return new DoubleXYZ(this.x + adder.x, this.y + adder.y, this.z + adder.z);
+	}
+	
+	public DoubleXYZ add(IntXYZ adder) {
+		return new DoubleXYZ(this.x + (double)adder.x, this.y + (double)adder.y, this.z + (double)adder.z);
+	}
+	
+	public DoubleXYZ multiply(double num) {
+		return new DoubleXYZ(this.x * num, this.y * num, this.z * num);
+	}
+	
+	public IntXYZ toInt() {
+		return new IntXYZ((int)Math.floor(this.x), (int)Math.floor(this.y), (int)Math.floor(this.z));
+	}
 }

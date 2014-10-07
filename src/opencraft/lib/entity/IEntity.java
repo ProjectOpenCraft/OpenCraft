@@ -38,7 +38,7 @@ public interface IEntity extends IEventHandler {
 	/**
 	 * Return unique id for each entity class
 	 * Recommended format : entityType|yourModId|yourEntityId
-	 * example : world|OpenCraft|earth
+	 * example : object|OpenCraft|player
 	 */
 	String getId();
 	

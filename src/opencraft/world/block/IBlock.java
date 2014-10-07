@@ -29,16 +29,49 @@
 
 package opencraft.world.block;
 
+import opencraft.lib.CubeDirection;
 import opencraft.lib.INamed;
 import opencraft.world.EntityWorld;
+import opencraft.world.block.material.IBlockMeterial;
 
 public interface IBlock extends INamed {
 	
-	/*
-	 * Return unique string-id for each blocks
+	/**
+	 * @return unique string-id for each blocks
 	 */
 	String getId();
+	
+	/**
+	 * every tick the chunk call single block's this method which is stored in that chunk
+	 * 
+	 * @param world
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @return block that will replace this block
+	 */
 	IBlock onChunkTick(EntityWorld world, int x, int y, int z);
+	
+	/**
+	 * called when neighbor block is changed(placed, breaked, etc)
+	 * 
+	 * @param world
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @param side
+	 */
+	void onNeighborChanged(EntityWorld world, int x, int y, int z, CubeDirection side);
+	
+	/**
+	 * get block's material
+	 * you can return null if isFluid is true
+	 * because you cannot break fluid block by hand :)
+	 * 
+	 * @return block's material
+	 */
+	IBlockMeterial getMetarial();
+	
 	boolean isAir();
 	boolean isTransparent();
 	boolean isFluid();

@@ -32,9 +32,12 @@ package opencraft.item;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import opencraft.lib.INamed;
 import opencraft.lib.entity.Entity;
+import opencraft.world.object.living.DamageTypeFist;
+import opencraft.world.object.living.IDamageType;
 
 public abstract class EntityItem extends Entity implements INamed {
 	
@@ -43,8 +46,14 @@ public abstract class EntityItem extends Entity implements INamed {
 	public Collection<String> getTags() {
 		return this.tags;
 	}
+	
+	public abstract Set<IToolType> getToolTypes();
 
 	public int getAttackDamage() {
 		return 1;
+	}
+	
+	public IDamageType getDamageType() {
+		return new DamageTypeFist();
 	}
 }

@@ -43,6 +43,7 @@ import opencraft.lib.entity.data.IntXYZ;
 import opencraft.lib.entity.storage.EntityStorageIntXYZ;
 import opencraft.lib.entity.storage.EntityStorageList;
 import opencraft.lib.entity.storage.IEntityStorage;
+import opencraft.lib.event.EnumEventOrder;
 import opencraft.lib.event.IEvent;
 import opencraft.lib.event.IEventListener;
 import opencraft.lib.tick.ITickable;
@@ -210,6 +211,11 @@ public class EntityChunk extends Entity implements ITickable {
 			}
 			return event;
 		}
+
+		@Override
+		public EnumEventOrder getOrder() {
+			return EnumEventOrder.lowest;
+		}
 		
 	}
 	
@@ -243,6 +249,11 @@ public class EntityChunk extends Entity implements ITickable {
 				ticks.removeTick((EntityObject)entityObject);
 			}
 			return event;
+		}
+
+		@Override
+		public EnumEventOrder getOrder() {
+			return EnumEventOrder.lowest;
 		}
 		
 	}

@@ -32,6 +32,7 @@ package opencraft.lib.event;
 public interface IEventListener {
 	
 	Class<? extends IEvent> getEventClass();
+	EnumEventOrder getOrder();
 	IEvent handleEvent(IEvent event);
 
 }

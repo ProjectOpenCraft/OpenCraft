@@ -39,6 +39,7 @@ import opencraft.lib.entity.Entity;
 import opencraft.lib.entity.IEntity;
 import opencraft.lib.entity.data.DoubleXYZ;
 import opencraft.lib.entity.data.IntXYZ;
+import opencraft.lib.event.EnumEventOrder;
 import opencraft.lib.event.IEvent;
 import opencraft.lib.event.IEventListener;
 import opencraft.packet.s2c.PacketFullChunk;
@@ -46,13 +47,14 @@ import opencraft.packet.s2c.PacketUpdateBlock;
 import opencraft.packet.s2c.PacketUpdateObject;
 import opencraft.server.client.Client;
 import opencraft.server.client.ClientInfo;
-import opencraft.world.block.IBlockInteractor;
 import opencraft.world.chunk.ChunkAddress;
 import opencraft.world.chunk.EntityChunk;
+import opencraft.world.object.living.DamageTypeFist;
 import opencraft.world.object.living.EntityObjectLiving;
 import opencraft.world.object.living.IAttacker;
+import opencraft.world.object.living.IDamageType;
 
-public class Player extends EntityObjectLiving implements IBlockInteractor, IAttacker {
+public class Player extends EntityObjectLiving implements IAttacker {
 	
 	private ClientInfo info;
 	private Client client;
@@ -118,8 +120,13 @@ public class Player extends EntityObjectLiving implements IBlockInteractor, IAtt
 
 	@Override
 	public int getAttackDamage(EntityObjectLiving target, EntityItem weapon) {
-		EventOnAttack event = (EventOnAttack) event().emit(new EventOnAttack(this, weapon, target, weapon.getAttackDamage()));
+		EventOnAttack event = (EventOnAttack) event().emit(new EventOnAttack(this, weapon, target, weapon == null ? 1 : weapon.getAttackDamage(), this.getDamageType(target, weapon)));
 		return event.damage;
+	}
+	
+	@Override
+	public IDamageType getDamageType(EntityObjectLiving target, EntityItem weapon) {
+		return weapon == null ? new DamageTypeFist() : weapon.getDamageType();
 	}
 
 	@Override
@@ -169,6 +176,11 @@ public class Player extends EntityObjectLiving implements IBlockInteractor, IAtt
 			client.sender().emit(event);
 			return event;
 		}
+
+		@Override
+		public EnumEventOrder getOrder() {
+			return EnumEventOrder.lowest;
+		}
 	}
 	
 	class ObjectUpdateListener implements IEventListener {
@@ -188,6 +200,11 @@ public class Player extends EntityObjectLiving implements IBlockInteractor, IAtt
 		public IEvent handleEvent(IEvent event) {
 			client.sender().emit(event);
 			return event;
+		}
+
+		@Override
+		public EnumEventOrder getOrder() {
+			return EnumEventOrder.lowest;
 		}
 	}
 	
@@ -220,9 +237,14 @@ public class Player extends EntityObjectLiving implements IBlockInteractor, IAtt
 			}
 			return event;
 		}
+
+		@Override
+		public EnumEventOrder getOrder() {
+			return EnumEventOrder.lowest;
+		}
 	}
 	
-class PlayerPartWorldListener implements IEventListener {
+	class PlayerPartWorldListener implements IEventListener {
 		
 		Player player;
 		
@@ -249,6 +271,11 @@ class PlayerPartWorldListener implements IEventListener {
 				}
 			}
 			return event;
+		}
+
+		@Override
+		public EnumEventOrder getOrder() {
+			return EnumEventOrder.lowest;
 		}
 	}
 }

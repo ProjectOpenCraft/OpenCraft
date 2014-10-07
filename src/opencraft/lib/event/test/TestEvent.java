@@ -36,6 +36,7 @@ import org.json.simple.parser.ParseException;
 import opencraft.lib.entity.Entity;
 import opencraft.lib.entity.IEntity;
 import opencraft.lib.entity.IEntityRegistry;
+import opencraft.lib.event.EnumEventOrder;
 import opencraft.lib.event.EventDispatcher;
 import opencraft.lib.event.IEvent;
 import opencraft.lib.event.IEventDispatcher;
@@ -62,6 +63,11 @@ public class TestEvent{
 				
 				return event;
 			}
+
+			@Override
+			public EnumEventOrder getOrder() {
+				return EnumEventOrder.lower;
+			}
 			
 		});
 		ed.addListener(new IEventListener() {
@@ -79,6 +85,11 @@ public class TestEvent{
 				System.out.println("Age : " + e.age);
 				
 				return event;
+			}
+
+			@Override
+			public EnumEventOrder getOrder() {
+				return EnumEventOrder.lower;
 			}
 			
 		});

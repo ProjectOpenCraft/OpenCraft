@@ -38,13 +38,14 @@ import java.io.PrintWriter;
 public class Licenser {
 	
 	public static void main(String[] args) throws IOException {
-		if (args.length < 3) {
-			System.out.println("Format : java Licenser.class <srcDir> <licenseDir> <author>");
+		if (args.length < 2) {
+			System.out.println("Format : java Licenser.class <projectDir> <author>");
 			return;
 		}
-		File targetDir = new File(args[0]);
-		File licenseDir = new File(args[1]);
-		String author = args[2];
+		File rootDir = new File(args[0]);
+		File targetDir = new File(rootDir, "src");
+		File licenseDir = new File(rootDir, "License.txt");
+		String author = args[1];
 		allFile(targetDir, licenseDir, author);
 	}
 	

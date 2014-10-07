@@ -43,8 +43,8 @@ import opencraft.event.object.EventObjectSpawn;
 import opencraft.event.object.living.player.EventPlayerJoinWorld;
 import opencraft.event.object.living.player.EventPlayerPartWorld;
 import opencraft.lib.INamed;
-import opencraft.lib.entity.data.IntXYZ;
 import opencraft.lib.entity.file.EntityLoader;
+import opencraft.lib.event.EnumEventOrder;
 import opencraft.lib.event.IEvent;
 import opencraft.lib.event.IEventListener;
 import opencraft.lib.event.packet.PacketReceiver;
@@ -94,7 +94,7 @@ public class Client implements INamed {
 		if (this.player == null) return;
 		player.setClient(this);
 		
-		ChunkAddress chunkAddr = new ChunkAddress(this.getName(), new IntXYZ(((Double)Math.floor(player.getCoord().x /32)).intValue(), ((Double)Math.floor(player.getCoord().y /32)).intValue(), ((Double)Math.floor(player.getCoord().z /32)).intValue()));
+		ChunkAddress chunkAddr = new ChunkAddress(this.getName(), player.getCoord().multiply(1/32).toInt());//new IntXYZ(((Double)Math.floor(player.getCoord().x /32)).intValue(), ((Double)Math.floor(player.getCoord().y /32)).intValue(), ((Double)Math.floor(player.getCoord().z /32)).intValue()));
 		
 		manager.mapClient.put(info.name, this);
 		manager.clientPool.remove(this);
@@ -181,6 +181,11 @@ public class Client implements INamed {
 			player.event().emit(event);
 			return event;
 		}
+
+		@Override
+		public EnumEventOrder getOrder() {
+			return EnumEventOrder.lowest;
+		}
 	}
 	
 	class PlayerSightListener implements IEventListener {
@@ -201,6 +206,11 @@ public class Client implements INamed {
 			player.event().emit(event);
 			return event;
 		}
+
+		@Override
+		public EnumEventOrder getOrder() {
+			return EnumEventOrder.lowest;
+		}
 	}
 	
 	class PartServerListener implements IEventListener {
@@ -220,6 +230,11 @@ public class Client implements INamed {
 		public IEvent handleEvent(IEvent event) {
 			client.part();
 			return event;
+		}
+
+		@Override
+		public EnumEventOrder getOrder() {
+			return EnumEventOrder.lowest;
 		}
 	}
 }

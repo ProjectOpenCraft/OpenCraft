@@ -34,5 +34,6 @@ import opencraft.lib.INamed;
 
 public interface IAttacker extends INamed {
 	
-	public int getAttackDamage(EntityObjectLiving target, EntityItem weapon);
+	int getAttackDamage(EntityObjectLiving target, EntityItem weapon);
+	IDamageType getDamageType(EntityObjectLiving target, EntityItem weapon);
 }

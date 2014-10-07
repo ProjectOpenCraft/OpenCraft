@@ -31,8 +31,13 @@ package opencraft.world.object.living;
 
 import org.json.simple.JSONObject;
 
+import opencraft.event.object.living.EventOnAttacked;
+import opencraft.event.object.living.EventOnDeath;
 import opencraft.lib.entity.IEntity;
 import opencraft.lib.entity.data.DoubleXYZ;
+import opencraft.lib.event.EnumEventOrder;
+import opencraft.lib.event.IEvent;
+import opencraft.lib.event.IEventListener;
 import opencraft.world.object.EntityObject;
 
 public abstract class EntityObjectLiving extends EntityObject {
@@ -80,5 +85,55 @@ public abstract class EntityObjectLiving extends EntityObject {
 		this.maxHealth = (int) json.get("maxH");
 		this.curHealth = (int) json.get("curH");
 		return this;
+	}
+	
+	class AttackedListener implements IEventListener {
+		
+		EntityObjectLiving living;
+		
+		public AttackedListener(EntityObjectLiving living) {
+			this.living = living;
+		}
+
+		@Override
+		public Class<? extends IEvent> getEventClass() {
+			return EventOnAttacked.class;
+		}
+
+		@Override
+		public IEvent handleEvent(IEvent event) {
+			EventOnAttacked e = (EventOnAttacked) event;
+			this.living.curHealth -= e.damage;
+			if (this.living.curHealth <= 0) {
+				this.living.curHealth = 0;
+				this.living.event().emit(new EventOnDeath(this.living));
+			}
+			
+			
+			return event;
+		}
+
+		@Override
+		public EnumEventOrder getOrder() {
+			return EnumEventOrder.lowest;
+		}
+	}
+	
+	class DeathListener implements IEventListener {
+
+		@Override
+		public Class<? extends IEvent> getEventClass() {
+			return EventOnDeath.class;
+		}
+
+		@Override
+		public IEvent handleEvent(IEvent event) {
+			return event;
+		}
+
+		@Override
+		public EnumEventOrder getOrder() {
+			return EnumEventOrder.lowest;
+		}
 	}
 }

@@ -29,6 +29,8 @@
 
 package opencraft.world.block;
 
+import opencraft.world.block.material.IBlockMeterial;
+
 public class BlockAir extends Block {
 
 	@Override
@@ -59,5 +61,10 @@ public class BlockAir extends Block {
 	@Override
 	public boolean isFluid() {
 		return true;
+	}
+
+	@Override
+	public IBlockMeterial getMetarial() {
+		return null;
 	}
 }

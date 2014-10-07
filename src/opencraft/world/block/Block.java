@@ -29,6 +29,7 @@
 
 package opencraft.world.block;
 
+import opencraft.lib.CubeDirection;
 import opencraft.world.EntityWorld;
 
 public abstract class Block implements IBlock {
@@ -37,6 +38,10 @@ public abstract class Block implements IBlock {
 	
 	public IBlock onChunkTick(EntityWorld world, int x, int y, int z) {
 		return this;
+	}
+	
+	public void onNeighborChanged(EntityWorld world, int x, int y, int z, CubeDirection side) {
+		
 	}
 	
 	public boolean isAir() {
