@@ -29,49 +29,16 @@
 
 package opencraft.packet.s2c;
 
-import java.util.HashMap;
 import java.util.Map;
 
-import org.json.simple.JSONObject;
-
-import opencraft.lib.entity.IEntity;
 import opencraft.lib.event.packet.Packet;
 
 public class PacketBlockMap extends Packet {
 
-	@Override
-	public String getId() {
-		return "packet|OpenCraft|blockMap";
-	}
-	
-	public final Map<Character, String> mapBlock;
-	
-	public PacketBlockMap() {
-		this.mapBlock = null;
-	}
+	public Map<Character, String> mapBlock;
 	
 	public PacketBlockMap(Map<Character, String> map) {
+		super("OpenCraft|blockMap");
 		this.mapBlock = map;
-	}
-	
-	@SuppressWarnings("unchecked")
-	@Override
-	public JSONObject toJSON(JSONObject json) {
-		super.toJSON(json);
-		for (Character cha : this.mapBlock.keySet()) {
-			json.put(cha, this.mapBlock.get(cha));
-		}
-		return json;
-	}
-	
-	@Override
-	public IEntity fromJSON(JSONObject json) {
-		super.fromJSON(json);
-		Map<Character, String> map = new HashMap<Character, String>();
-		for (Object ch : json.keySet()) {
-			Character cha = (Character) ch;
-			map.put(cha, (String) json.get(cha));
-		}
-		return new PacketBlockMap(map);
 	}
 }

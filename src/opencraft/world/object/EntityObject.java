@@ -31,11 +31,8 @@ package opencraft.world.object;
 
 import java.util.UUID;
 
-import org.json.simple.JSONObject;
-
 import opencraft.lib.INamed;
 import opencraft.lib.entity.Entity;
-import opencraft.lib.entity.IEntity;
 import opencraft.lib.entity.data.DoubleXYZ;
 import opencraft.lib.tick.ITickable;
 import opencraft.packet.s2c.PacketUpdateObject;
@@ -84,23 +81,6 @@ public abstract class EntityObject extends Entity implements ITickable, INamed {
 	
 	public DoubleXYZ getCoord() {
 		return this.coord;
-	}
-	
-	@SuppressWarnings("unchecked")
-	@Override
-	public JSONObject toJSON(JSONObject json) {
-		super.toJSON(json);
-		json.put("world", this.world);
-		json.put("coord", this.coord.toJSON(new JSONObject()));
-		return json;
-	}
-	
-	@Override
-	public IEntity fromJSON(JSONObject json) {
-		super.fromJSON(json);
-		this.world = (String) json.get("world");
-		this.coord = (DoubleXYZ) Entity.registry.getEntity((JSONObject) json.get("coord"));
-		return this;
 	}
 	
 	@Override

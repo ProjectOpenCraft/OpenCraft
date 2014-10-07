@@ -29,10 +29,7 @@
 
 package opencraft.lib.entity.data;
 
-import org.json.simple.JSONObject;
-
 import opencraft.lib.entity.Entity;
-import opencraft.lib.entity.IEntity;
 
 public class IntXYZ extends Entity {
 	
@@ -83,36 +80,9 @@ public class IntXYZ extends Entity {
 		}
 	}
 	
-	public IntXYZ(JSONObject json) {
-		this.x = (int) json.get("x");
-		this.y = (int) json.get("y");
-		this.z = (int) json.get("z");
-	}
-	
 	@Override
 	public String toString() {
 		return new StringBuilder("(").append(x).append(",").append(y).append(",").append(z).append(")").toString();
-	}
-	
-	@Override
-	@SuppressWarnings("unchecked")
-	public JSONObject toJSON(JSONObject json) {
-		super.toJSON(json);
-		json.put("x", x);
-		json.put("y", y);
-		json.put("z", z);
-		return json;
-	}
-	
-	@Override
-	public IEntity fromJSON(JSONObject json) {
-		super.fromJSON(json);
-		return new IntXYZ(json);
-	}
-
-	@Override
-	public String getId() {
-		return "data|OpenCraft|intXYZ";
 	}
 	
 	public IntXYZ add(IntXYZ adder) {

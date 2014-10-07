@@ -32,10 +32,6 @@ package opencraft.lib.entity.storage;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-
-import opencraft.lib.entity.Entity;
 import opencraft.lib.entity.IEntity;
 
 public class EntityStorageArray extends EntityStorage {
@@ -110,33 +106,5 @@ public class EntityStorageArray extends EntityStorage {
 	
 	public int size() {
 		return this.arrayEntity.length;
-	}
-	
-	@SuppressWarnings("unchecked")
-	@Override
-	public JSONObject toJSON(JSONObject json) {
-		super.toJSON(json);
-		JSONArray arr = new JSONArray();
-		for (int i=0;i<this.arrayEntity.length;i++) {
-			arr.add(i, this.arrayEntity[i].toJSON(new JSONObject()));
-		}
-		json.put("array", arr);
-		return json;
-	}
-	
-	@Override
-	public IEntity fromJSON(JSONObject json) {
-		super.fromJSON(json);
-		JSONArray arr = (JSONArray) json.get("array");
-		this.arrayEntity = new IEntity[arr.size()];
-		for (int i=0;i<arr.size();i++) {
-			this.arrayEntity[i] = Entity.registry.getEntity((JSONObject) arr.get(i));
-		}
-		return this;
-	}
-
-	@Override
-	public String getId() {
-		return "entityStorage|OpenCraft|array";
 	}
 }

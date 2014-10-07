@@ -31,8 +31,6 @@ package opencraft.world.chunk;
 
 import java.util.Random;
 
-import org.json.simple.JSONObject;
-
 import opencraft.OpenCraft;
 import opencraft.event.world.chunk.EventBlockChanged;
 import opencraft.event.world.chunk.EventLoadChunk;
@@ -109,29 +107,6 @@ public class EntityChunk extends Entity implements ITickable {
 	
 	public void removeObject(EntityObject obj) {
 		this.entityObjects.removeValue(obj);
-	}
-	
-	@Override
-	@SuppressWarnings("unchecked")
-	public JSONObject toJSON(JSONObject json) {
-		super.toJSON(json);
-		json.put("world", address.world);
-		json.put("coord", address.coord.toJSON(new JSONObject()));
-		json.put("block", encode(block));
-		json.put("entityBlock", entityBlocks.toJSON(new JSONObject()));
-		json.put("entityObject", entityObjects.toJSON(new JSONObject()));
-		return json;
-	}
-	
-	@Override
-	public IEntity fromJSON(JSONObject json) {
-		super.fromJSON(json);
-		IntXYZ coord = (IntXYZ) Entity.registry.getEntity((JSONObject) json.get("coord"));
-		this.address = new ChunkAddress((String) json.get("world"), coord);
-		this.block = decode((String) json.get("block"));
-		this.entityBlocks = (EntityStorageIntXYZ) Entity.registry.getEntity((JSONObject) json.get("entityBlock"));
-		this.entityObjects = (EntityStorageList) Entity.registry.getEntity((JSONObject) json.get("entityObject"));
-		return this;
 	}
 	
 	public String getChunkBlockData() {
@@ -256,10 +231,5 @@ public class EntityChunk extends Entity implements ITickable {
 			return EnumEventOrder.lowest;
 		}
 		
-	}
-
-	@Override
-	public String getId() {
-		return "world|OpenCraft|chunk";
 	}
 }

@@ -29,12 +29,8 @@
 
 package opencraft.world.object;
 
-import org.json.simple.JSONObject;
-
 import opencraft.event.object.EventObjectDespawn;
 import opencraft.item.EntityItem;
-import opencraft.lib.entity.Entity;
-import opencraft.lib.entity.IEntity;
 
 public class EntityObjectItem extends EntityObject {
 	
@@ -57,24 +53,6 @@ public class EntityObjectItem extends EntityObject {
 	public String getName() {
 		return "obj|" + this.item.getName();
 	}
-	
-	@SuppressWarnings("unchecked")
-	@Override
-	public JSONObject toJSON(JSONObject json) {
-		super.toJSON(json);
-		json.put("item", item.toJSON(new JSONObject()));
-		json.put("angle", angle);
-		return json;
-	}
-	
-	@Override
-	public IEntity fromJSON(JSONObject json) {
-		super.fromJSON(json);
-		EntityItem item = (EntityItem) Entity.registry.getEntity((JSONObject) json.get("item"));
-		double angle = (double) json.get("angle");
-		return new EntityObjectItem(item, angle);
-		
-	}
 
 	@Override
 	public void tick() {
@@ -87,10 +65,5 @@ public class EntityObjectItem extends EntityObject {
 				
 			}
 		}
-	}
-
-	@Override
-	public String getId() {
-		return "object|OpenCraft|item";
 	}
 }

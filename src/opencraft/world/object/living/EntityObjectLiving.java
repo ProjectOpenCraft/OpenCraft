@@ -29,11 +29,8 @@
 
 package opencraft.world.object.living;
 
-import org.json.simple.JSONObject;
-
 import opencraft.event.object.living.EventOnAttacked;
 import opencraft.event.object.living.EventOnDeath;
-import opencraft.lib.entity.IEntity;
 import opencraft.lib.entity.data.DoubleXYZ;
 import opencraft.lib.event.EnumEventOrder;
 import opencraft.lib.event.IEvent;
@@ -62,29 +59,6 @@ public abstract class EntityObjectLiving extends EntityObject {
 		this.headYaw = yaw;
 		this.maxHealth = maxHealth;
 		this.curHealth = curHealth;
-	}
-	
-	@SuppressWarnings("unchecked")
-	@Override
-	public JSONObject toJSON(JSONObject json) {
-		super.toJSON(json);
-		json.put("angle", angle);
-		json.put("pitch", headPitch);
-		json.put("yaw", headYaw);
-		json.put("maxH", maxHealth);
-		json.put("curH", curHealth);
-		return json;
-	}
-	
-	@Override
-	public IEntity fromJSON(JSONObject json) {
-		super.fromJSON(json);
-		this.angle = (double) json.get("angle");
-		this.headPitch = (double) json.get("pitch");
-		this.headYaw = (double) json.get("yaw");
-		this.maxHealth = (int) json.get("maxH");
-		this.curHealth = (int) json.get("curH");
-		return this;
 	}
 	
 	class AttackedListener implements IEventListener {

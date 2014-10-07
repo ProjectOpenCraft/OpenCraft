@@ -38,47 +38,19 @@ import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.WritableByteChannel;
 
-import org.json.simple.JSONObject;
-
-import opencraft.lib.entity.IEntity;
 import opencraft.lib.event.packet.Packet;
 
 public class PacketFileStart extends Packet {
 
-	@Override
-	public String getId() {
-		return "packet|OpenCraft|fileStart";
-	}
-	
 	public final File file;
 	public final String filePath;
 	public final long fileLength;
 	
-	public PacketFileStart() {
-		this.file = null;
-		this.filePath = "";
-		this.fileLength = 0l;
-	}
-	
 	public PacketFileStart(File file, String path, long length) {
+		super("OpenCraft|fileStart");
 		this.file = file;
 		this.filePath = path;
 		this.fileLength = length;
-	}
-	
-	@SuppressWarnings("unchecked")
-	@Override
-	public JSONObject toJSON(JSONObject json) {
-		super.toJSON(json);
-		json.put("name", this.filePath);
-		json.put("length", this.fileLength);
-		return json;
-	}
-	
-	@Override
-	public IEntity fromJSON(JSONObject json) {
-		super.fromJSON(json);
-		return new PacketFileStart(null, (String)json.get("name"), (Long)json.get("length"));
 	}
 	
 	@Override

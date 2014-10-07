@@ -34,10 +34,6 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-
-import opencraft.lib.entity.Entity;
 import opencraft.lib.entity.IEntity;
 
 public class EntityStorageList extends EntityStorage {
@@ -95,33 +91,5 @@ public class EntityStorageList extends EntityStorage {
 	@Override
 	public Collection<IEntity> values() {
 		return this.listEntity;
-	}
-	
-	@SuppressWarnings("unchecked")
-	@Override
-	public JSONObject toJSON(JSONObject json) {
-		super.toJSON(json);
-		JSONArray arr = new JSONArray();
-		for (IEntity ntt : this.listEntity) {
-			arr.add(ntt.toJSON(new JSONObject()));
-		}
-		json.put("array", arr);
-		return json;
-	}
-	
-	@Override 
-	public IEntity fromJSON(JSONObject json) {
-		super.fromJSON(json);
-		JSONArray arr = (JSONArray) json.get("array");
-		for (Object jntt : arr) {
-			IEntity ntt = Entity.registry.getEntity((JSONObject)jntt);
-			this.listEntity.add(ntt);
-		}
-		return this;
-	}
-
-	@Override
-	public String getId() {
-		return "entityStorage|OpenCraft|list";
 	}
 }

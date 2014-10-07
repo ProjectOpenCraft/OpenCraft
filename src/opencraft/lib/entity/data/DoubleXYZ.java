@@ -30,9 +30,6 @@
 package opencraft.lib.entity.data;
 
 import opencraft.lib.entity.Entity;
-import opencraft.lib.entity.IEntity;
-
-import org.json.simple.JSONObject;
 
 public class DoubleXYZ extends Entity {
 	
@@ -83,31 +80,9 @@ public class DoubleXYZ extends Entity {
 		}
 	}
 	
-	public DoubleXYZ(JSONObject json) {
-		this.x = (double) json.get("x");
-		this.y = (double) json.get("y");
-		this.z = (double) json.get("z");
-	}
-	
 	@Override
 	public String toString() {
 		return new StringBuffer("(").append(x).append(",").append(y).append(",").append(z).append(")").toString();
-	}
-	
-	@Override
-	@SuppressWarnings("unchecked")
-	public JSONObject toJSON(JSONObject json) {
-		super.toJSON(json);
-		json.put("x", x);
-		json.put("y", y);
-		json.put("z", z);
-		return json;
-	}
-	
-	@Override
-	public IEntity fromJSON(JSONObject json) {
-		super.fromJSON(json);
-		return new DoubleXYZ(json);
 	}
 	
 	@Override
@@ -116,11 +91,6 @@ public class DoubleXYZ extends Entity {
 			DoubleXYZ d = (DoubleXYZ) obj;
 			return this.x == d.x && this.y == d.y && this.z == d.z;
 		} else return false;
-	}
-
-	@Override
-	public String getId() {
-		return "data|OpenCraft|doubleXYZ";
 	}
 	
 	public DoubleXYZ add(DoubleXYZ adder) {

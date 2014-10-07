@@ -36,20 +36,20 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
+import com.google.gson.Gson;
 
-import opencraft.lib.entity.Entity;
 import opencraft.lib.entity.IEntity;
 
 public class EntityLoader {
 	
-	public static IEntity loadEntity(File file) {
+	public static Gson gson = new Gson();
+	
+	public static IEntity loadEntity(File file, Class<? extends IEntity> clazz) {
 		try {
 			BufferedReader r = new BufferedReader(new FileReader(file));
-			JSONObject json = (JSONObject) JSONValue.parse(r);
+			IEntity ntt = gson.fromJson(r, clazz);
 			r.close();
-			return Entity.registry.getEntity(json);
+			return ntt;
 		} catch (IOException e) {
 			return null;
 		}
@@ -57,7 +57,7 @@ public class EntityLoader {
 	
 	public static void saveEntity(IEntity entity, File file) throws IOException {
 		BufferedWriter r = new BufferedWriter(new FileWriter(file));
-		JSONObject json = entity.toJSON(new JSONObject());
-		json.writeJSONString(r);
+		r.write(gson.toJson(entity));
+		r.close();
 	}
 }

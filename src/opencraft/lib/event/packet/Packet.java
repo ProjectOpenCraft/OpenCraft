@@ -34,5 +34,14 @@ import opencraft.lib.entity.Entity;
 import opencraft.lib.event.IEvent;
 
 public abstract class Packet extends Entity implements IEvent {
+	
+	public static PacketRegistry registry = new PacketRegistry();
+	
+	public final String packetId;
+	
+	public Packet(String packetId) {
+		this.packetId = packetId;
+	}
+	
 	public void sendBinary(BufferedOutputStream out) {}
 }

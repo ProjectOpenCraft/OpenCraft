@@ -29,14 +29,10 @@
 
 package opencraft.world.object.living.player;
 
-import org.json.simple.JSONObject;
-
 import opencraft.event.object.living.EventOnAttack;
 import opencraft.event.object.living.player.EventPlayerJoinWorld;
 import opencraft.event.object.living.player.EventPlayerPartWorld;
 import opencraft.item.EntityItem;
-import opencraft.lib.entity.Entity;
-import opencraft.lib.entity.IEntity;
 import opencraft.lib.entity.data.DoubleXYZ;
 import opencraft.lib.entity.data.IntXYZ;
 import opencraft.lib.event.EnumEventOrder;
@@ -90,24 +86,6 @@ public class Player extends EntityObjectLiving implements IAttacker {
 		return info != null && secret != null && secret.equals(info.clientSecret);
 	}
 	
-	@Override
-	@SuppressWarnings("unchecked")
-	public JSONObject toJSON(JSONObject json) {
-		super.toJSON(json);
-		json.put("info", info.toJSON(new JSONObject()));
-		return json;
-	}
-	
-	@Override
-	public IEntity fromJSON(JSONObject json) {
-		super.fromJSON(json);
-		this.info = (ClientInfo) Entity.registry.getEntity((JSONObject) json.get("info"));
-		String world = (String) json.get("world");
-		IntXYZ chunk = (IntXYZ) Entity.registry.getEntity((JSONObject) json.get("chunk"));
-		this.prvAddress = new ChunkAddress(world, chunk);
-		return this;
-	}
-	
 	public Client getClient() {
 		return this.client;
 	}
@@ -151,11 +129,6 @@ public class Player extends EntityObjectLiving implements IAttacker {
 				}
 			}
 		}
-	}
-
-	@Override
-	public String getId() {
-		return "object|OpenCraft|player";
 	}
 	
 	class BlockUpdateListener implements IEventListener {

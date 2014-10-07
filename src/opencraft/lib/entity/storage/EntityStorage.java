@@ -29,16 +29,13 @@
 
 package opencraft.lib.entity.storage;
 
-import org.json.simple.JSONObject;
-
 import opencraft.lib.entity.Entity;
 
 public abstract class EntityStorage extends Entity implements IEntityStorage {
 	
 	@Override
 	public IEntityStorage copy() {
-		JSONObject json = this.toJSON(new JSONObject());
-		IEntityStorage newStorage = (IEntityStorage) Entity.registry.getEntity(json);
-		return newStorage;
+		String json = gson.toJson(this);
+		return gson.fromJson(json, this.getClass());
 	}
 }

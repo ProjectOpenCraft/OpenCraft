@@ -77,7 +77,7 @@ public class ClientManager extends Thread implements IEventHandler {
 	Player getPlayer(ClientInfo info) {
 		for (File file : OpenCraft.playerDir.listFiles()) {
 			if (file.getName().equals(info.clientId)) {
-				Player player = (Player) EntityLoader.loadEntity(file);
+				Player player = (Player) EntityLoader.loadEntity(file, Player.class);
 				if (player.isMatchingClient(info.clientId)) {
 					if (player.isValidClient(info.clientSecret)) {
 						return player;

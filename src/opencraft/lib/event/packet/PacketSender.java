@@ -33,12 +33,15 @@ import java.io.BufferedOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import org.json.simple.JSONObject;
+
+import com.google.gson.Gson;
 
 import opencraft.lib.event.EventDispatcher;
 import opencraft.lib.event.IEvent;
 
 public class PacketSender extends EventDispatcher {
+	
+	public static Gson gson = new Gson();
 	
 	public BufferedOutputStream out;
 	DataOutputStream w;
@@ -53,7 +56,7 @@ public class PacketSender extends EventDispatcher {
 		super.emit(event);
 		
 		if (event instanceof Packet) {
-			String data = ((Packet) event).toJSON(new JSONObject()).toJSONString();
+			String data = gson.toJson(event);
 			try {
 				data = new StringBuffer("pac").append(data).append("ket").toString();
 				w.writeUTF(data);

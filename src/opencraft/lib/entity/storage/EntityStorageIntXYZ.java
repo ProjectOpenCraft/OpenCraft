@@ -34,11 +34,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import opencraft.lib.entity.Entity;
 import opencraft.lib.entity.IEntity;
 import opencraft.lib.entity.data.IntXYZ;
-
-import org.json.simple.JSONObject;
 
 public class EntityStorageIntXYZ extends EntityStorage {
 	
@@ -62,28 +59,6 @@ public class EntityStorageIntXYZ extends EntityStorage {
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
-	public JSONObject toJSON(JSONObject json) {
-		super.toJSON(json);
-		for (IntXYZ key : this.mapEntity.keySet()) {
-			String name = key.toString();
-			JSONObject j = this.mapEntity.get(key).toJSON(new JSONObject());
-			json.put(name, j);
-		}
-		return json;
-	}
-
-	@Override
-	public IEntity fromJSON(JSONObject json) {
-		super.fromJSON(json);
-		for (Object key : json.keySet()) {
-			if (!(key instanceof String)) key = key.toString();
-			this.mapEntity.put(new IntXYZ((String) key), Entity.registry.getEntity((JSONObject) json.get(key)));
-		}
-		return this;
-	}
-
-	@Override
 	public Collection<IEntity> values() {
 		return this.mapEntity.values();
 	}
@@ -104,11 +79,6 @@ public class EntityStorageIntXYZ extends EntityStorage {
 			}
 		}
 		return false;
-	}
-
-	@Override
-	public String getId() {
-		return "entityStorage|OpenCraft|intXYZ";
 	}
 
 }

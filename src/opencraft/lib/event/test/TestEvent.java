@@ -29,13 +29,8 @@
 
 package opencraft.lib.event.test;
 
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import com.google.gson.Gson;
 
-import opencraft.lib.entity.Entity;
-import opencraft.lib.entity.IEntity;
-import opencraft.lib.entity.IEntityRegistry;
 import opencraft.lib.event.EnumEventOrder;
 import opencraft.lib.event.EventDispatcher;
 import opencraft.lib.event.IEvent;
@@ -44,20 +39,22 @@ import opencraft.lib.event.IEventListener;
 import opencraft.lib.event.packet.Packet;
 
 public class TestEvent{
+	
+	public static Gson gson = new Gson();
 
-	public static void main(String[] args) throws ParseException {
+	public static void main(String[] args) {
 		
 		IEventDispatcher ed = new EventDispatcher();
 		ed.addListener(new IEventListener() {
 
 			@Override
 			public Class<? extends IEvent> getEventClass() {
-				return EventPerson.class;
+				return PacketPerson.class;
 			}
 
 			@Override
 			public IEvent handleEvent(IEvent event) {
-				EventPerson e = (EventPerson) event;
+				PacketPerson e = (PacketPerson) event;
 				
 				System.out.println(e.name + " - " + e.age);
 				
@@ -74,12 +71,12 @@ public class TestEvent{
 
 			@Override
 			public Class<? extends IEvent> getEventClass() {
-				return EventPerson.class;
+				return PacketPerson.class;
 			}
 
 			@Override
 			public IEvent handleEvent(IEvent event) {
-				EventPerson e = (EventPerson) event;
+				PacketPerson e = (PacketPerson) event;
 				
 				System.out.println("Name : " + e.name);
 				System.out.println("Age : " + e.age);
@@ -93,56 +90,25 @@ public class TestEvent{
 			}
 			
 		});
-		ed.emit(new TestEvent.EventPerson("Moonrise", 20L));
+		ed.emit(new PacketPerson("Moonrise", 20L));
+		
+		String data = gson.toJson(new PacketPerson("arcticfox", 19L));
 		
 		
-		IEntityRegistry registry = Entity.registry;
-		JSONParser parser = new JSONParser();
-		registry.registerEntity(new EventPerson());
 		
-		String data = new TestEvent.EventPerson("arcticfox", 19L).toJSON(new JSONObject()).toJSONString();
-		
-		Packet packet = (Packet) registry.getEntity((JSONObject) parser.parse(data));
+		Packet packet = gson.fromJson(data, PacketPerson.class);
 		ed.emit(packet);
 	}
 	
-	public static class EventPerson extends Packet {
+	public static class PacketPerson extends Packet {
 		
 		public String name;
 		public long age;
 		
-		public EventPerson() {
-			this.name = "";
-			this.age =0;
-		}
-		
-		public EventPerson(String n, long a) {
+		public PacketPerson(String n, long a) {
+			super("OpenCraft|testPerson");
 			this.name = n;
 			this.age = a;
-		}
-
-		@Override
-		@SuppressWarnings("unchecked")
-		public JSONObject toJSON(JSONObject json) {
-			super.toJSON(json);
-			
-			json.put("name", name);
-			json.put("age", age);
-			
-			return json;
-		}
-
-		@Override
-		public IEntity fromJSON(JSONObject json) {
-			this.name = (String) json.get("name");
-			this.age = (long) json.get("age");
-			
-			return this;
-		}
-
-		@Override
-		public String getId() {
-			return "packet|testOpenCraft|person";
 		}
 	}
 }
