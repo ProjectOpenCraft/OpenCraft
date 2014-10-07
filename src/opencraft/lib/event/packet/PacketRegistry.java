@@ -17,8 +17,18 @@ public static final String ENTITY_ID = "packetId";
 		this.mapPacket = Collections.synchronizedMap(new HashMap<String, Class<? extends Packet>>());
 	}
 
-	public void registerPacket(Packet entity) {
-		this.mapPacket.put(entity.packetId, entity.getClass());
+	public void registerPacket(Class<? extends Packet> packet) {
+		try {
+			this.mapPacket.put((String) packet.getField(ENTITY_ID).get(null), packet);
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (NoSuchFieldException e) {
+			e.printStackTrace();
+		} catch (SecurityException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public Class<? extends Packet> getPacketClass(String json) {

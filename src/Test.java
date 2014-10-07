@@ -28,8 +28,10 @@
  */
 
 public class Test {
+	
+	public static String myVar = "niceVar";
 
-	public static void main(String[] args) {
-		
+	public static void main(String[] args) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+		System.out.println(Test.class.getField("myVar").get(null));
 	}
 }
