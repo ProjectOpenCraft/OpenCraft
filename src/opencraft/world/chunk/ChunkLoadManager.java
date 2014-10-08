@@ -111,11 +111,13 @@ public class ChunkLoadManager implements ITickable {
 				OpenCraftServer.instance().getWorldManager().getWorld(req.world).getChunkManager().receiveChunk(chunk);
 		}
 		for (int i=0; i<(this.buffer.size()/this.chunkSaveDelay) +1; i++) {
-			EntityChunk chunk = this.buffer.poll();
-			try {
-				EntityLoader.saveEntity(chunk, new File(new File(OpenCraft.worldDir, chunk.address.world), chunk.address.coord.toString()));
-			} catch (IOException e) {
-				e.printStackTrace();
+			if (!this.buffer.isEmpty()) {
+				EntityChunk chunk = this.buffer.poll();
+				try {
+					EntityLoader.saveEntity(chunk, new File(new File(OpenCraft.worldDir, chunk.address.world), chunk.address.coord.toString()));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}

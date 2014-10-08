@@ -83,8 +83,8 @@ public class OpenCraftServer {
 			}
 			
 			this.clientManager = new ClientManager(Integer.parseInt(props.getProperty("port", "39372")));
-			this.worldManager = new WorldManager(Integer.parseInt(props.getProperty("chunk_load_per_tick", "100")), Double.parseDouble(props.getProperty("chunk_save_delay", "2.0")));
 			this.tickManager = new TickManager(Integer.parseInt(props.getProperty("tick_threads", "100")), Integer.parseInt(props.getProperty("tick_time_ms", "50")));
+			this.worldManager = new WorldManager(Integer.parseInt(props.getProperty("chunk_load_per_tick", "100")), Double.parseDouble(props.getProperty("chunk_save_delay", "2.0")));
 			this.modManager = new ModManager();
 			
 			this.modManager.start();

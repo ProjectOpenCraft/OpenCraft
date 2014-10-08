@@ -38,7 +38,7 @@ import org.json.simple.JSONValue;
 
 public class PacketRegistry {
 	
-public static final String ENTITY_ID = "packetId";
+public static final String PACKET_ID = "packetId";
 	
 	private Map<String, Class<? extends Packet>> mapPacket;
 	
@@ -48,7 +48,7 @@ public static final String ENTITY_ID = "packetId";
 
 	public void registerPacket(Class<? extends Packet> packet) {
 		try {
-			this.mapPacket.put((String) packet.getField(ENTITY_ID).get(null), packet);
+			this.mapPacket.put((String) packet.getField(PACKET_ID).get(null), packet);
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {

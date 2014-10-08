@@ -43,6 +43,7 @@ public class WorldManager {
 	
 	public WorldManager(int chunkLoadPerTick, double chunkSaveDelay) {
 		this.chunkLoadManager = new ChunkLoadManager(chunkLoadPerTick, chunkSaveDelay);
+		OpenCraftServer.instance().getTickManager().addTick(chunkLoadManager);
 	}
 	
 	public ChunkLoadManager getChunkLoadManager() {

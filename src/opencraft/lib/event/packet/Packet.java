@@ -37,10 +37,10 @@ public abstract class Packet extends Entity implements IEvent {
 	
 	public static PacketRegistry registry = new PacketRegistry();
 	
-	public final String packetId;
+	public static String packetId;
 	
-	public Packet(String packetId) {
-		this.packetId = packetId;
+	public Packet(String id) {
+		packetId = id;
 	}
 	
 	public void sendBinary(BufferedOutputStream out) {}
