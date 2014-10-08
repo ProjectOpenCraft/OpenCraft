@@ -102,7 +102,7 @@ public class Client implements INamed {
 		if (this.player == null) return;
 		player.setClient(this);
 		
-		ChunkAddress chunkAddr = new ChunkAddress(this.getName(), player.getCoord().multiply(1/32).toInt());//new IntXYZ(((Double)Math.floor(player.getCoord().x /32)).intValue(), ((Double)Math.floor(player.getCoord().y /32)).intValue(), ((Double)Math.floor(player.getCoord().z /32)).intValue()));
+		ChunkAddress chunkAddr = new ChunkAddress(this.getName(), player.getCoord().multiply(1d/32d).toInt());//new IntXYZ(((Double)Math.floor(player.getCoord().x /32)).intValue(), ((Double)Math.floor(player.getCoord().y /32)).intValue(), ((Double)Math.floor(player.getCoord().z /32)).intValue()));
 		
 		manager.mapClient.put(info.name, this);
 		manager.clientPool.remove(this);

@@ -29,6 +29,9 @@
 
 package opencraft.world.object.living.player;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import opencraft.event.object.living.EventOnAttack;
 import opencraft.event.object.living.player.EventPlayerJoinWorld;
 import opencraft.event.object.living.player.EventPlayerPartWorld;
@@ -46,6 +49,7 @@ import opencraft.server.client.ClientInfo;
 import opencraft.server.client.Ocan;
 import opencraft.world.chunk.ChunkAddress;
 import opencraft.world.chunk.EntityChunk;
+import opencraft.world.chunk.IChunkComponent;
 import opencraft.world.object.living.DamageTypeFist;
 import opencraft.world.object.living.EntityObjectLiving;
 import opencraft.world.object.living.IAttacker;
@@ -124,7 +128,10 @@ public class Player extends EntityObjectLiving implements IAttacker {
 							EntityChunk newChunk = getWorld().getChunkManager().getChunk(new ChunkAddress(this.prvAddress.world, new IntXYZ(getChunk().getAddress().coord.x +i, getChunk().getAddress().coord.y +j, getChunk().getAddress().coord.z +k)));
 							newChunk.event().addListener(this.blockListener);
 							newChunk.event().addListener(this.objectListener);
-							this.client.sender().emit(new PacketFullChunk(newChunk.getChunkBlockData(), newChunk.getObjectList()));
+							List<IChunkComponent> list = new ArrayList<IChunkComponent>();
+							list.addAll(newChunk.getObjectList());
+							list.addAll(newChunk.getEntityBlockList());
+							this.client.sender().emit(new PacketFullChunk(newChunk.getChunkBlockData(), list));
 						}
 					}
 				}

@@ -29,18 +29,20 @@
 
 package opencraft.world.chunk;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
-import opencraft.OpenCraft;
 import opencraft.event.world.chunk.EventBlockChanged;
 import opencraft.event.world.chunk.EventLoadChunk;
 import opencraft.event.world.chunk.EventUnloadChunk;
 import opencraft.lib.entity.Entity;
 import opencraft.lib.entity.IEntity;
 import opencraft.lib.entity.data.IntXYZ;
-import opencraft.lib.entity.storage.EntityStorageIntXYZ;
-import opencraft.lib.entity.storage.EntityStorageList;
-import opencraft.lib.entity.storage.IEntityStorage;
 import opencraft.lib.event.EnumEventOrder;
 import opencraft.lib.event.IEvent;
 import opencraft.lib.event.IEventListener;
@@ -57,8 +59,8 @@ public class EntityChunk extends Entity implements ITickable {
 	
 	ChunkAddress address = new ChunkAddress("", new IntXYZ());
 	char[][][] block = new char[32][32][32];
-	EntityStorageIntXYZ entityBlocks = new EntityStorageIntXYZ();
-	EntityStorageList entityObjects = new EntityStorageList();
+	Map<IntXYZ, EntityBlock> entityBlocks = Collections.synchronizedMap(new HashMap<IntXYZ, EntityBlock>());
+	List<EntityObject> entityObjects = Collections.synchronizedList(new LinkedList<EntityObject>());
 	
 	public EntityChunk() {
 		super();
@@ -106,15 +108,19 @@ public class EntityChunk extends Entity implements ITickable {
 	}
 	
 	public void removeObject(EntityObject obj) {
-		this.entityObjects.removeValue(obj);
+		this.entityObjects.remove(obj);
 	}
 	
 	public String getChunkBlockData() {
 		return encode(this.block);
 	}
 	
-	public EntityStorageList getObjectList() {
+	public List<EntityObject> getObjectList() {
 		return this.entityObjects;
+	}
+	
+	public Collection<EntityBlock> getEntityBlockList() {
+		return this.entityBlocks.values();
 	}
 	
 	public static String encode(char[][][] block) {
@@ -145,7 +151,6 @@ public class EntityChunk extends Entity implements ITickable {
 
 	@Override
 	public void tick() {
-		OpenCraft.log.info("Chunk is ticking");
 		Random ran = new Random();
 		int x = ran.nextInt(32);
 		int y = ran.nextInt(32);
@@ -153,15 +158,23 @@ public class EntityChunk extends Entity implements ITickable {
 		IBlock b = Block.registry.getBlock(this.block[x][y][z]);
 		IBlock nb = b.onChunkTick(OpenCraftServer.instance().getWorldManager().getWorld(this.address.world), x + (this.address.coord.x * 32), y + (this.address.coord.y * 32), z + (this.address.coord.z * 32));
 		if (b != nb) event().emit(new PacketUpdateBlock(getBlockCoord(new IntXYZ(x, y, z)), Block.registry.getCode(nb)));
+		
+		for (EntityObject obj : this.entityObjects) {
+			IntXYZ objChunkCoord = obj.getCoord().multiply(1d/32d).toInt();
+			if (!objChunkCoord.equals(this.getAddress().coord) && obj.getWorld().getChunkByCoord(obj.getCoord()) != null) {
+				this.removeObject(obj);
+				obj.getWorld().getChunkByCoord(obj.getCoord()).addObject(obj);
+			}
+		}
 	}
 	
 	class EventListenerOnChunkLoad implements IEventListener {
 		
 		private EntityChunk chunk;
-		private IEntityStorage entityBlocks;
-		private IEntityStorage entityObjects;
+		private Map<IntXYZ, EntityBlock> entityBlocks;
+		private List<EntityObject> entityObjects;
 		
-		public EventListenerOnChunkLoad(EntityChunk chunk, IEntityStorage blocks, IEntityStorage objects) {
+		public EventListenerOnChunkLoad(EntityChunk chunk, Map<IntXYZ, EntityBlock> blocks, List<EntityObject> objects) {
 			this.chunk = chunk;
 			this.entityBlocks = blocks;
 			this.entityObjects = objects;
@@ -180,7 +193,7 @@ public class EntityChunk extends Entity implements ITickable {
 				entityBlock.event().emit(event);
 				ticks.addTick((EntityBlock)entityBlock);
 			}
-			for (IEntity entityObject : entityObjects.values()) {
+			for (IEntity entityObject : entityObjects) {
 				entityObject.event().emit(event);
 				ticks.addTick((EntityObject)entityObject);
 			}
@@ -197,10 +210,10 @@ public class EntityChunk extends Entity implements ITickable {
 	class EventListenerOnChunkUnload implements IEventListener {
 		
 		private EntityChunk chunk;
-		private IEntityStorage entityBlocks;
-		private IEntityStorage entityObjects;
+		private Map<IntXYZ, EntityBlock> entityBlocks;
+		private List<EntityObject> entityObjects;
 		
-		public EventListenerOnChunkUnload(EntityChunk chunk, IEntityStorage blocks, IEntityStorage objects) {
+		public EventListenerOnChunkUnload(EntityChunk chunk, Map<IntXYZ, EntityBlock> blocks, List<EntityObject> objects) {
 			this.chunk = chunk;
 			this.entityBlocks = blocks;
 			this.entityObjects = objects;
@@ -219,7 +232,7 @@ public class EntityChunk extends Entity implements ITickable {
 				entityBlock.event().emit(event);
 				ticks.removeTick((EntityBlock)entityBlock);
 			}
-			for (IEntity entityObject : entityObjects.values()) {
+			for (IEntity entityObject : entityObjects) {
 				entityObject.event().emit(event);
 				ticks.removeTick((EntityObject)entityObject);
 			}

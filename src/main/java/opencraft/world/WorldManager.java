@@ -30,15 +30,16 @@
 package opencraft.world;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 import opencraft.OpenCraft;
-import opencraft.lib.entity.storage.EntityStorageString;
 import opencraft.server.OpenCraftServer;
 import opencraft.world.chunk.ChunkLoadManager;
 
 public class WorldManager {
 	
-	private EntityStorageString worlds = new EntityStorageString();
+	private Map<String, EntityWorld> worlds = new HashMap<String, EntityWorld>();
 	private ChunkLoadManager chunkLoadManager;
 	
 	public WorldManager(int chunkLoadPerTick, double chunkSaveDelay) {

@@ -40,8 +40,9 @@ import opencraft.server.OpenCraftServer;
 import opencraft.server.client.Ocan;
 import opencraft.world.EntityWorld;
 import opencraft.world.chunk.EntityChunk;
+import opencraft.world.chunk.IChunkComponent;
 
-public abstract class EntityObject extends Entity implements ITickable, INamed {
+public abstract class EntityObject extends Entity implements ITickable, INamed, IChunkComponent {
 	
 	private DoubleXYZ prvCoord;
 	private double prvAngle;

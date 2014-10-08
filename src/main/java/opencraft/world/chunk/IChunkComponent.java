@@ -27,15 +27,8 @@
  *
  */
 
-package opencraft.lib.entity.storage;
+package opencraft.world.chunk;
 
-import opencraft.lib.entity.Entity;
+public interface IChunkComponent {
 
-public abstract class EntityStorage extends Entity implements IEntityStorage {
-	
-	@Override
-	public IEntityStorage copy() {
-		String json = gson.toJson(this);
-		return gson.fromJson(json, this.getClass());
-	}
 }

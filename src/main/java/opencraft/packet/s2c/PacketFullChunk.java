@@ -29,15 +29,17 @@
 
 package opencraft.packet.s2c;
 
-import opencraft.lib.entity.storage.EntityStorageList;
+import java.util.List;
+
 import opencraft.lib.event.packet.Packet;
+import opencraft.world.chunk.IChunkComponent;
 
 public class PacketFullChunk extends Packet {
 
 	public final String blocks;
-	public final EntityStorageList objects;
+	public final List<IChunkComponent> objects;
 	
-	public PacketFullChunk(String blocks, EntityStorageList objects) {
+	public PacketFullChunk(String blocks, List<IChunkComponent> objects) {
 		super("fullChunk");
 		this.blocks = blocks;
 		this.objects = objects;

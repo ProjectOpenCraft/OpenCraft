@@ -29,13 +29,15 @@
 
 package opencraft.server.client;
 
+import java.util.Map;
+
 public class Ocan {
 	
 	public final String mod;
 	public final String name;
-	public Object wildcard;
+	public Map<String, Object> wildcard;
 	
-	public Ocan(String mod, String name, Object wildcard) {
+	public Ocan(String mod, String name, Map<String, Object> wildcard) {
 		this.mod = mod;
 		this.name = name;
 		this.wildcard = wildcard;

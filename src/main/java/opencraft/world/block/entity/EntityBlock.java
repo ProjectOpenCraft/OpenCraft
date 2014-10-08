@@ -31,8 +31,8 @@ package opencraft.world.block.entity;
 
 import opencraft.lib.entity.Entity;
 import opencraft.lib.tick.ITickable;
+import opencraft.world.chunk.IChunkComponent;
 
-public abstract class EntityBlock extends Entity implements ITickable {
-
+public abstract class EntityBlock extends Entity implements ITickable, IChunkComponent {
 
 }
