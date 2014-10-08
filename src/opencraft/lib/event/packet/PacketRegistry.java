@@ -33,12 +33,12 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
+import com.google.gson.Gson;
 
 public class PacketRegistry {
 	
-public static final String PACKET_ID = "packetId";
+	public static final String PACKET_ID = "packetId";
+	public static Gson gson = new Gson();
 	
 	private Map<String, Class<? extends Packet>> mapPacket;
 	
@@ -60,8 +60,9 @@ public static final String PACKET_ID = "packetId";
 		}
 	}
 
+	@SuppressWarnings("static-access")
 	public Class<? extends Packet> getPacketClass(String json) {
-		JSONObject jobject = (JSONObject) JSONValue.parse(json);
-		return this.mapPacket.get(jobject.get("packetId"));
+		Packet packet = gson.fromJson(json, Packet.class);
+		return this.mapPacket.get(packet.packetId);
 	}
 }
