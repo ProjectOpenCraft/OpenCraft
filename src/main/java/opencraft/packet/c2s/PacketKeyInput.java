@@ -37,7 +37,7 @@ public class PacketKeyInput extends Packet {
 	public final boolean keyDown;
 	
 	public PacketKeyInput(String name, boolean isDown) {
-		super("OpenCraft|keyInput");
+		super("keyInput");
 		this.keyName = name;
 		this.keyDown = isDown;
 	}

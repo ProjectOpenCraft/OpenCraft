@@ -41,7 +41,7 @@ public class PacketSendModList extends Packet {
 	public Map<String, Integer> modList = new HashMap<String, Integer>();
 	
 	public PacketSendModList(List<IMod> mods) {
-		super("OpenCraft|sendModList");
+		super("sendModList");
 		for (IMod mod : mods) {
 			this.modList.put(mod.getName(), mod.getVersion());
 		}

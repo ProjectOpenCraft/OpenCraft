@@ -43,6 +43,7 @@ import opencraft.packet.s2c.PacketUpdateBlock;
 import opencraft.packet.s2c.PacketUpdateObject;
 import opencraft.server.client.Client;
 import opencraft.server.client.ClientInfo;
+import opencraft.server.client.Ocan;
 import opencraft.world.chunk.ChunkAddress;
 import opencraft.world.chunk.EntityChunk;
 import opencraft.world.object.living.DamageTypeFist;
@@ -67,7 +68,7 @@ public class Player extends EntityObjectLiving implements IAttacker {
 	}
 	
 	public Player(String world, DoubleXYZ coord, ClientInfo info) {
-		super(world, coord, "player|OpenCraft|stand", 0d, 0d, 100, 100);
+		super(world, coord, new Ocan("OpenCraft", "player|stand", null), 0d, 0d, 100, 100);
 		this.info = info;
 		this.event().addListener(new PlayerJoinWorldListener(this));
 		this.event().addListener(new PlayerPartWorldListener(this));

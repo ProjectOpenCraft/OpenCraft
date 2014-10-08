@@ -38,7 +38,7 @@ public class PacketBlockMap extends Packet {
 	public Map<Character, String> mapBlock;
 	
 	public PacketBlockMap(Map<Character, String> map) {
-		super("OpenCraft|blockMap");
+		super("blockMap");
 		this.mapBlock = map;
 	}
 }

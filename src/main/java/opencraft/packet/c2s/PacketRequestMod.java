@@ -38,7 +38,7 @@ public class PacketRequestMod extends Packet {
 	public List<String> modList;
 	
 	public PacketRequestMod(List<String> mods) {
-		super("OpenCraft|requestMod");
+		super("requestMod");
 		this.modList = mods;
 	}
 }

@@ -36,7 +36,7 @@ public class PacketPlayerSight extends Packet {
 	public final String id;
 	
 	public PacketPlayerSight(String componentId) {
-		super("OpenCraft|playerSight");
+		super("playerSight");
 		this.id = componentId;
 	}
 }

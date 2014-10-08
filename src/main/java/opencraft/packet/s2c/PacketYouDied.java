@@ -36,7 +36,7 @@ public class PacketYouDied extends Packet {
 	public String message;
 	
 	public PacketYouDied(String msg) {
-		super("OpenCraft|youDied");
+		super("youDied");
 		this.message = msg;
 	}
 }

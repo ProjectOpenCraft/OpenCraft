@@ -38,7 +38,7 @@ public class PacketClientInfo extends Packet {
 	public final ClientInfo info;
 	
 	public PacketClientInfo(ClientInfo i) {
-		super("OpenCraft|clientInfo");
+		super("clientInfo");
 		this.info = i;
 	}
 }

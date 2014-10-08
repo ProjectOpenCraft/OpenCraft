@@ -37,6 +37,7 @@ import opencraft.lib.entity.data.DoubleXYZ;
 import opencraft.lib.tick.ITickable;
 import opencraft.packet.s2c.PacketUpdateObject;
 import opencraft.server.OpenCraftServer;
+import opencraft.server.client.Ocan;
 import opencraft.world.EntityWorld;
 import opencraft.world.chunk.EntityChunk;
 
@@ -44,11 +45,11 @@ public abstract class EntityObject extends Entity implements ITickable, INamed {
 	
 	private DoubleXYZ prvCoord;
 	private double prvAngle;
-	private String prvRenderType;
+	private Ocan prvRenderType;
 	
 	protected DoubleXYZ coord;
 	protected double angle;
-	protected String renderType;
+	protected Ocan renderType;
 	
 	protected String world;
 	public final String uuid;
@@ -59,7 +60,7 @@ public abstract class EntityObject extends Entity implements ITickable, INamed {
 		this.coord = null;
 	}
 	
-	public EntityObject(String world, DoubleXYZ coord, String type) {
+	public EntityObject(String world, DoubleXYZ coord, Ocan type) {
 		this();
 		this.world = world;
 		this.coord = coord;
@@ -85,7 +86,7 @@ public abstract class EntityObject extends Entity implements ITickable, INamed {
 	
 	@Override
 	public void tick() {
-		if (!(this.prvCoord.equals(this.coord) && this.prvAngle == this.angle && this.prvRenderType == this.renderType)) {
+		if (!(this.prvCoord.equals(this.coord) && this.prvAngle == this.angle && this.prvRenderType.equals(this.renderType))) {
 			getChunk().event().emit(new PacketUpdateObject(this.uuid, this.coord, this.angle, this.renderType));
 		}
 	}

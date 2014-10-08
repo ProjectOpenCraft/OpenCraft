@@ -27,18 +27,17 @@
  *
  */
 
-package opencraft.packet.s2c;
+package opencraft.server.client;
 
-import java.util.Map;
-
-import opencraft.lib.event.packet.Packet;
-
-public class PacketKeyList extends Packet {
-
-	public Map<String, Integer> keyMap;
+public class Ocan {
 	
-	public PacketKeyList(Map<String, Integer> keyMap) {
-		super("keyList");
-		this.keyMap = keyMap;
+	public final String mod;
+	public final String name;
+	public Object wildcard;
+	
+	public Ocan(String mod, String name, Object wildcard) {
+		this.mod = mod;
+		this.name = name;
+		this.wildcard = wildcard;
 	}
 }

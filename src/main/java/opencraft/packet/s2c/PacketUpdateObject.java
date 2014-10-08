@@ -31,19 +31,20 @@ package opencraft.packet.s2c;
 
 import opencraft.lib.entity.data.DoubleXYZ;
 import opencraft.lib.event.packet.Packet;
+import opencraft.server.client.Ocan;
 
 public class PacketUpdateObject extends Packet {
 
-	public String uuid;
+	public String id;
 	public DoubleXYZ coord;
 	public double angle;
-	public String renderType;
+	public Ocan info;
 	
-	public PacketUpdateObject(String uuid, DoubleXYZ coord, double angle, String type) {
-		super("OpenCraft|updateObject");
-		this.uuid = uuid;
+	public PacketUpdateObject(String id, DoubleXYZ coord, double angle, Ocan info) {
+		super("updateObject");
+		this.id = id;
 		this.coord = coord;
 		this.angle = angle;
-		this.renderType = type;
+		this.info = info;
 	}
 }

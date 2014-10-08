@@ -47,7 +47,7 @@ public class PacketFileStart extends Packet {
 	public final long fileLength;
 	
 	public PacketFileStart(File file, String path, long length) {
-		super("OpenCraft|fileStart");
+		super("fileStart");
 		this.file = file;
 		this.filePath = path;
 		this.fileLength = length;

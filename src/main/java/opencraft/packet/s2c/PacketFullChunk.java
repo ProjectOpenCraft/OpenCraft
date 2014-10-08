@@ -38,7 +38,7 @@ public class PacketFullChunk extends Packet {
 	public final EntityStorageList objects;
 	
 	public PacketFullChunk(String blocks, EntityStorageList objects) {
-		super("OpenCraft|fullChunk");
+		super("fullChunk");
 		this.blocks = blocks;
 		this.objects = objects;
 	}

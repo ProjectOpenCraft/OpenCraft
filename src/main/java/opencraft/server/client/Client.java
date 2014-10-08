@@ -32,6 +32,9 @@ package opencraft.server.client;
 import java.io.File;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 
@@ -53,6 +56,8 @@ import opencraft.packet.PacketFileStart;
 import opencraft.packet.c2s.PacketKeyInput;
 import opencraft.packet.c2s.PacketPartServer;
 import opencraft.packet.c2s.PacketPlayerSight;
+import opencraft.packet.s2c.PacketUpdateGui;
+import opencraft.packet.s2c.PacketUpdateHud;
 import opencraft.server.OpenCraftServer;
 import opencraft.world.chunk.ChunkAddress;
 import opencraft.world.object.living.player.Player;
@@ -68,7 +73,10 @@ public class Client implements INamed {
 	PacketReceiver receiver = null;
 	PacketSender sender = null;
 	
-	Player player = null;;
+	Player player = null;
+	
+	Ocan gui = null;
+	Set<Ocan> huds = Collections.synchronizedSet(new HashSet<Ocan>());
 	
 	public Client(Socket soc, ClientManager manager) throws IOException {
 		this.log = OpenCraft.log;
@@ -135,6 +143,40 @@ public class Client implements INamed {
 		}
 		manager.removeClient(this);
 		
+	}
+	
+	public Ocan getGUI() {
+		return this.gui;
+	}
+	
+	public void setGUI(Ocan gui) {
+		this.gui = gui;
+		this.sender.emit(new PacketUpdateGui(gui));
+	}
+	
+	public Ocan getHUD(String mod, String name) {
+		for (Ocan hud : this.huds) {
+			if (hud.mod.equals(mod) && hud.name.equals(name)) {
+				return hud;
+			}
+		}
+		return null;
+	}
+	
+	public void addHUD(Ocan hud) {
+		this.huds.add(hud);
+		this.sender.emit(new PacketUpdateHud(hud));
+	}
+	
+	public Ocan removeHUD(String mod, String name) {
+		Ocan result = null;
+		for (Ocan hud : this.huds) {
+			if (hud.mod.equals(mod) && hud.name.equals(name)) {
+				result = hud;
+			}
+		}
+		if (result != null) this.huds.remove(result);
+		return result;
 	}
 	
 	public static void sendFile(PacketSender sender, File file, String path) {

@@ -38,7 +38,7 @@ public class PacketUpdateBlock extends Packet {
 	public char block;
 	
 	public PacketUpdateBlock(IntXYZ coord, char block) {
-		super("OpenCraft|updateBlock");
+		super("updateBlock");
 		this.coord = coord;
 		this.block = block;
 	}

@@ -35,6 +35,7 @@ import opencraft.lib.entity.data.DoubleXYZ;
 import opencraft.lib.event.EnumEventOrder;
 import opencraft.lib.event.IEvent;
 import opencraft.lib.event.IEventListener;
+import opencraft.server.client.Ocan;
 import opencraft.world.object.EntityObject;
 
 public abstract class EntityObjectLiving extends EntityObject {
@@ -53,7 +54,7 @@ public abstract class EntityObjectLiving extends EntityObject {
 		this.curHealth = 0;
 	}
 	
-	public EntityObjectLiving(String world, DoubleXYZ coord, String type, double pitch, double yaw, int maxHealth, int curHealth) {
+	public EntityObjectLiving(String world, DoubleXYZ coord, Ocan type, double pitch, double yaw, int maxHealth, int curHealth) {
 		super(world, coord, type);
 		this.headPitch = pitch;
 		this.headYaw = yaw;

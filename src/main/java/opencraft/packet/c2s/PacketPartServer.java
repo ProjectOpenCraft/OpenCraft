@@ -36,7 +36,7 @@ public class PacketPartServer extends Packet {
 	public String message;
 	
 	public PacketPartServer(String msg) {
-		super("OpenCraft|partServer");
+		super("partServer");
 		this.message = msg;
 	}
 }

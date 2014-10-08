@@ -29,16 +29,15 @@
 
 package opencraft.packet.s2c;
 
-import java.util.Map;
-
 import opencraft.lib.event.packet.Packet;
+import opencraft.server.client.Ocan;
 
-public class PacketKeyList extends Packet {
-
-	public Map<String, Integer> keyMap;
+public class PacketUpdateGui extends Packet {
 	
-	public PacketKeyList(Map<String, Integer> keyMap) {
-		super("keyList");
-		this.keyMap = keyMap;
+	public Ocan gui;
+	
+	public PacketUpdateGui(Ocan gui) {
+		super("updateGui");
+		this.gui = gui;
 	}
 }
