@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Implementation-Title: OpenCraft
+Implementation-Version: 0.1.0_1
+

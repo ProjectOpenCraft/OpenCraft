@@ -1,0 +1,16 @@
+apply plugin : 'java'
+apply plugin : 'eclipse'
+
+dependencies {
+	compile fileTree(dir: 'lib', include: '*.jar')
+}
+
+//majorVersion.minorVersion.bugFix_buildNumber
+version = '0.1.0_1'
+
+jar {
+	manifest {
+		attributes 'Implementation-Title': 'OpenCraft',
+		'Implementation-Version': version
+	}
+}
