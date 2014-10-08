@@ -38,14 +38,18 @@ import java.util.Map;
 
 public class EventDispatcher implements IEventDispatcher {
 	
-	Map<Class<? extends IEvent>, List<IEventListener>> mapListener;
+	Map<EnumEventOrder, Map<Class<? extends IEvent>, List<IEventListener>>> mapListeners;
 	
 	public EventDispatcher() {
-		mapListener = Collections.synchronizedMap(new HashMap<Class<? extends IEvent>, List<IEventListener>>());
+		mapListeners = new HashMap<EnumEventOrder, Map<Class<? extends IEvent>, List<IEventListener>>>();
+		for (EnumEventOrder order : EnumEventOrder.values()) {
+			this.mapListeners.put(order, Collections.synchronizedMap(new HashMap<Class<? extends IEvent>, List<IEventListener>>()));
+		}
 	}
 
 	@Override
 	public boolean addListener(IEventListener listener) {
+		Map<Class<? extends IEvent>, List<IEventListener>> mapListener = this.mapListeners.get(listener.getOrder());
 		if (mapListener.get(listener.getEventClass()) == null) {
 			mapListener.put((Class<? extends IEvent>) listener.getEventClass(), Collections.synchronizedList(new ArrayList<IEventListener>()));
 		}
@@ -54,18 +58,23 @@ public class EventDispatcher implements IEventDispatcher {
 	
 	@Override
 	public boolean removeListener(IEventListener listener) {
-		if (listener == null || this.mapListener.get(listener.getEventClass()) == null) return false;
-		return this.mapListener.get(listener.getEventClass()).remove(listener);
+		Map<Class<? extends IEvent>, List<IEventListener>> mapListener = this.mapListeners.get(listener.getOrder());
+		if (listener == null || mapListener.get(listener.getEventClass()) == null) return false;
+		return mapListener.get(listener.getEventClass()).remove(listener);
 	}
 
 	@Override
 	public IEvent emit(IEvent event) {
-		List<IEventListener> listeners = mapListener.get(event.getClass());
-		if (listeners != null) {
-			Iterator<IEventListener> itr = listeners.iterator();
-			
-			while(itr.hasNext()) {
-				event = itr.next().handleEvent(event);
+		Iterator<Map<Class<? extends IEvent>, List<IEventListener>>> itr = this.mapListeners.values().iterator();
+		while (itr.hasNext()) {
+			Map<Class<? extends IEvent>, List<IEventListener>> mapListener = itr.next();
+			List<IEventListener> listeners = mapListener.get(event.getClass());
+			if (listeners != null) {
+				Iterator<IEventListener> itre = listeners.iterator();
+				
+				while(itre.hasNext()) {
+					event = itre.next().handleEvent(event);
+				}
 			}
 		}
 		
