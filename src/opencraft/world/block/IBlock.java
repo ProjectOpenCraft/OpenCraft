@@ -31,13 +31,14 @@ package opencraft.world.block;
 
 import opencraft.lib.CubeDirection;
 import opencraft.lib.INamed;
+import opencraft.lib.entity.data.Box;
 import opencraft.world.EntityWorld;
 import opencraft.world.block.material.IBlockMeterial;
 
 public interface IBlock extends INamed {
 	
 	/**
-	 * @return unique string-id for each blocks
+	 * @return unique string-id for each blocks ex) OpenCraft|air
 	 */
 	String getId();
 	
@@ -71,6 +72,15 @@ public interface IBlock extends INamed {
 	 * @return block's material
 	 */
 	IBlockMeterial getMetarial();
+	
+	/**
+	 * get block's bounding box
+	 * used for object collision detection
+	 * if your block is fluid(like water, air, etc), return null
+	 * 
+	 * @return Axis Aligned Bounding Box of this block
+	 */
+	Box getAABB();
 	
 	boolean isAir();
 	boolean isTransparent();

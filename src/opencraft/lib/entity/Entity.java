@@ -51,6 +51,11 @@ public abstract class Entity implements IEntity {
 	}
 	
 	@Override
+	public IEntity copy() {
+		return gson.fromJson(gson.toJson(this), this.getClass());
+	}
+	
+	@Override
 	public void addSubEntity(IEntity entity) {
 		this.mapSubEntity.put(entity.getClass(), entity);
 	}

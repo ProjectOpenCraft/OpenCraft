@@ -41,6 +41,8 @@ import opencraft.world.object.living.IDamageType;
 
 public abstract class EntityItem extends Entity implements INamed {
 	
+	public int amount = 0;
+	
 	public List<String> tags = new ArrayList<String>();
 	
 	public Collection<String> getTags() {
@@ -55,5 +57,13 @@ public abstract class EntityItem extends Entity implements INamed {
 	
 	public IDamageType getDamageType() {
 		return new DamageTypeFist();
+	}
+	
+	public EntityItem take(int num) {
+		num = Math.min(num, this.amount);
+		this.amount -= num;
+		EntityItem result = (EntityItem) this.copy();
+		result.amount = num;
+		return result;
 	}
 }

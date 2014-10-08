@@ -33,6 +33,7 @@ import opencraft.lib.event.IEventHandler;
 
 public interface IEntity extends IEventHandler {
 	
+	IEntity copy();
 	void addSubEntity(IEntity entity);
 	IEntity getSubEntity(Class<? extends IEntity> clazz);
 }

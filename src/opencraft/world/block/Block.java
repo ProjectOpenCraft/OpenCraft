@@ -30,6 +30,7 @@
 package opencraft.world.block;
 
 import opencraft.lib.CubeDirection;
+import opencraft.lib.entity.data.Box;
 import opencraft.world.EntityWorld;
 
 public abstract class Block implements IBlock {
@@ -42,6 +43,10 @@ public abstract class Block implements IBlock {
 	
 	public void onNeighborChanged(EntityWorld world, int x, int y, int z, CubeDirection side) {
 		
+	}
+	
+	public Box getAABB() {
+		return new Box(0, 0, 0, 1, 1, 1);
 	}
 	
 	public boolean isAir() {
