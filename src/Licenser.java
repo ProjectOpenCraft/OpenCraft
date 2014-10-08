@@ -47,6 +47,7 @@ public class Licenser {
 		File licenseDir = new File(rootDir, "License.txt");
 		String author = args[1];
 		allFile(targetDir, licenseDir, author);
+		System.out.println("All done!");
 	}
 	
 	public static void allFile(File dir, File license, String author) throws IOException {
