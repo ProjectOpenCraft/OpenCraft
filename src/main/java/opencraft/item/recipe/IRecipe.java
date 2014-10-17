@@ -34,5 +34,5 @@ import opencraft.item.EntityItem;
 public interface IRecipe {
 	
 	boolean match(EntityItem[][] grid);
-	EntityItem result();
+	EntityItem result(EntityItem[][] grid);
 }

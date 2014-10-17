@@ -43,6 +43,7 @@ public class SingleTagRecipe implements IRecipe {
 
 	@Override
 	public boolean match(EntityItem[][] grid) {
+		if (grid.length != 1 || grid[0].length != 1) return false;
 		EntityItem in = null;
 		boolean hasElem = false;
 		for (int i=0; i<grid.length; i++) {
@@ -59,7 +60,9 @@ public class SingleTagRecipe implements IRecipe {
 	}
 
 	@Override
-	public EntityItem result() {
+	public EntityItem result(EntityItem[][] grid) {
+		grid[0][0].take(1);
+		if (grid[0][0].amount <= 0) grid[0][0] = null;
 		return output;
 	}
 

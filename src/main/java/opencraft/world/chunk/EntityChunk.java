@@ -156,7 +156,7 @@ public class EntityChunk extends Entity implements ITickable {
 		int y = ran.nextInt(32);
 		int z = ran.nextInt(32);
 		IBlock b = Block.registry.getBlock(this.block[x][y][z]);
-		IBlock nb = b.onChunkTick(OpenCraftServer.instance().getWorldManager().getWorld(this.address.world), x + (this.address.coord.x * 32), y + (this.address.coord.y * 32), z + (this.address.coord.z * 32));
+		IBlock nb = b.onChunkTick(OpenCraftServer.instance().getWorldManager().getWorld(this.address.world), this.address.coord.multiply(32).add(new IntXYZ(x, y, z)));
 		if (b != nb) event().emit(new PacketUpdateBlock(getBlockCoord(new IntXYZ(x, y, z)), Block.registry.getCode(nb)));
 		
 		for (EntityObject obj : this.entityObjects) {

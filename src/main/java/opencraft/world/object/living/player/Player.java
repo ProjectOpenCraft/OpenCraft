@@ -50,7 +50,7 @@ import opencraft.server.client.Ocan;
 import opencraft.world.chunk.ChunkAddress;
 import opencraft.world.chunk.EntityChunk;
 import opencraft.world.chunk.IChunkComponent;
-import opencraft.world.object.living.DamageTypeFist;
+import opencraft.world.object.living.DamageTypePhysical;
 import opencraft.world.object.living.EntityObjectLiving;
 import opencraft.world.object.living.IAttacker;
 import opencraft.world.object.living.IDamageType;
@@ -109,7 +109,7 @@ public class Player extends EntityObjectLiving implements IAttacker {
 	
 	@Override
 	public IDamageType getDamageType(EntityObjectLiving target, EntityItem weapon) {
-		return weapon == null ? new DamageTypeFist() : weapon.getDamageType();
+		return weapon == null ? DamageTypePhysical.instance() : weapon.getDamageType();
 	}
 
 	@Override

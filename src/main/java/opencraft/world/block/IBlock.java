@@ -29,11 +29,15 @@
 
 package opencraft.world.block;
 
+import java.util.Collection;
+
 import opencraft.lib.CubeDirection;
 import opencraft.lib.INamed;
 import opencraft.lib.entity.data.Box;
+import opencraft.lib.entity.data.IntXYZ;
 import opencraft.world.EntityWorld;
 import opencraft.world.block.material.IBlockMeterial;
+import opencraft.world.object.EntityObject;
 
 public interface IBlock extends INamed {
 	
@@ -45,24 +49,21 @@ public interface IBlock extends INamed {
 	/**
 	 * every tick the chunk call single block's this method which is stored in that chunk
 	 * 
-	 * @param world
-	 * @param x
-	 * @param y
-	 * @param z
 	 * @return block that will replace this block
 	 */
-	IBlock onChunkTick(EntityWorld world, int x, int y, int z);
+	IBlock onChunkTick(EntityWorld world, IntXYZ coord);
 	
 	/**
 	 * called when neighbor block is changed(placed, breaked, etc)
 	 * 
-	 * @param world
-	 * @param x
-	 * @param y
-	 * @param z
-	 * @param side
 	 */
-	void onNeighborChanged(EntityWorld world, int x, int y, int z, CubeDirection side);
+	void onNeighborChanged(EntityWorld world, IntXYZ coord, CubeDirection side);
+	
+	/**
+	 * called when object is in this block's collision box.
+	 * 
+	 */
+	void onObjectCollide(EntityWorld world, IntXYZ coord, EntityObject object);
 	
 	/**
 	 * get block's material
@@ -76,11 +77,10 @@ public interface IBlock extends INamed {
 	/**
 	 * get block's bounding box
 	 * used for object collision detection
-	 * if your block is fluid(like water, air, etc), return null
 	 * 
 	 * @return Axis Aligned Bounding Box of this block
 	 */
-	Box getAABB();
+	Collection<Box> getAABB();
 	
 	boolean isAir();
 	boolean isTransparent();

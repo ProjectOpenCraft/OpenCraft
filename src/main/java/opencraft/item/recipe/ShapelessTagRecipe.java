@@ -69,7 +69,17 @@ public class ShapelessTagRecipe implements IRecipe {
 	}
 
 	@Override
-	public EntityItem result() {
+	public EntityItem result(EntityItem[][] grid) {
+		for (EntityItem[] row : grid) {
+			for (EntityItem elem : row) {
+				if (elem != null) {
+					elem.take(1);
+					if (elem.amount <= 0) {
+						elem = null;
+					}
+				}
+			}
+		}
 		return this.result;
 	}
 }

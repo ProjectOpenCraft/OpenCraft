@@ -29,7 +29,6 @@
 
 package opencraft.world.block;
 
-import opencraft.lib.entity.data.Box;
 import opencraft.world.block.material.IBlockMeterial;
 
 public class BlockAir extends Block {
@@ -66,11 +65,6 @@ public class BlockAir extends Block {
 
 	@Override
 	public IBlockMeterial getMetarial() {
-		return null;
-	}
-
-	@Override
-	public Box getAABB() {
 		return null;
 	}
 }

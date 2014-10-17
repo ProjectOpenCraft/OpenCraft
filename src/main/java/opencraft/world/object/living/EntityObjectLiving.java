@@ -52,6 +52,7 @@ public abstract class EntityObjectLiving extends EntityObject {
 		this.headYaw = 0d;
 		this.maxHealth = 0;
 		this.curHealth = 0;
+		this.addListeners();
 	}
 	
 	public EntityObjectLiving(String world, DoubleXYZ coord, Ocan type, double pitch, double yaw, int maxHealth, int curHealth) {
@@ -60,6 +61,12 @@ public abstract class EntityObjectLiving extends EntityObject {
 		this.headYaw = yaw;
 		this.maxHealth = maxHealth;
 		this.curHealth = curHealth;
+		this.addListeners();
+	}
+	
+	private void addListeners() {
+		this.event().addListener(new AttackedListener(this));
+		this.event().addListener(new DeathListener(this));
 	}
 	
 	class AttackedListener implements IEventListener {
@@ -95,6 +102,12 @@ public abstract class EntityObjectLiving extends EntityObject {
 	}
 	
 	class DeathListener implements IEventListener {
+		
+		EntityObjectLiving living;
+		
+		public DeathListener(EntityObjectLiving living) {
+			this.living = living;
+		}
 
 		@Override
 		public Class<? extends IEvent> getEventClass() {

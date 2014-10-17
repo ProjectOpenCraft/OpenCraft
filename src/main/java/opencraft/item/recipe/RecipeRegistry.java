@@ -74,28 +74,28 @@ public class RecipeRegistry {
 	
 	public static EntityItem getCraftingResult(EntityItem[][] grid) {
 		for (IRecipe recipe : craftingRegistry) {
-			if (recipe.match(grid)) return recipe.result();
+			if (recipe.match(grid)) return recipe.result(grid);
 		}
 		return null;
 	}
 	
 	public static EntityItem getGrindingResult(EntityItem[][] grid) {
 		for (IRecipe recipe : grindingRegistry) {
-			if (recipe.match(grid)) return recipe.result();
+			if (recipe.match(grid)) return recipe.result(grid);
 		}
 		return null;
 	}
 	
 	public static EntityItem getSmeltingResult(EntityItem[][] grid) {
 		for (IRecipe recipe : smeltingRegistry) {
-			if (recipe.match(grid)) return recipe.result();
+			if (recipe.match(grid)) return recipe.result(grid);
 		}
 		return null;
 	}
 	
 	public static EntityItem getAlloyResult(EntityItem[][] grid) {
 		for (IRecipe recipe : alloyRegistry) {
-			if (recipe.match(grid)) return recipe.result();
+			if (recipe.match(grid)) return recipe.result(grid);
 		}
 		return null;
 	}

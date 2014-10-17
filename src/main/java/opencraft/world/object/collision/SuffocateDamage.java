@@ -27,20 +27,38 @@
  *
  */
 
-package opencraft.world.object.living;
+package opencraft.world.object.collision;
 
 import opencraft.item.EntityItem;
+import opencraft.world.object.living.DamageTypePhysical;
+import opencraft.world.object.living.EntityObjectLiving;
+import opencraft.world.object.living.IAttacker;
+import opencraft.world.object.living.IDamageType;
 
-public class DamageTypeFist implements IDamageType {
+public class SuffocateDamage implements IAttacker {
+	
+	private static SuffocateDamage inst;
+	
+	public static SuffocateDamage instance() {
+		if (inst == null) inst = new SuffocateDamage();
+		return inst;
+	}
+	
+	private SuffocateDamage(){}
 
 	@Override
 	public String getName() {
-		return "Fist";
+		return "Suffocate";
 	}
 
 	@Override
-	public void onAttacked(EntityObjectLiving target, IAttacker attacker, EntityItem item) {
-		
+	public int getAttackDamage(EntityObjectLiving target, EntityItem weapon) {
+		return 1;
 	}
 
+	@Override
+	public IDamageType getDamageType(EntityObjectLiving target, EntityItem weapon) {
+		return DamageTypePhysical.instance();
+	}
+	
 }

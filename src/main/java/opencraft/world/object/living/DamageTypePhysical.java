@@ -27,38 +27,29 @@
  *
  */
 
-package opencraft.event.object.living;
+package opencraft.world.object.living;
 
-import opencraft.event.ICancelable;
 import opencraft.item.EntityItem;
-import opencraft.lib.event.IEvent;
-import opencraft.world.object.living.EntityObjectLiving;
-import opencraft.world.object.living.IAttacker;
 
-public class EventOnAttacked implements IEvent, ICancelable {
+public class DamageTypePhysical implements IDamageType {
 	
-	private boolean isCanceled = false;
-	
-	public final IAttacker attacker;
-	public final EntityItem weapon;
-	public final EntityObjectLiving living;
-	public int damage;
+	private DamageTypePhysical(){}
 
-	public EventOnAttacked(IAttacker attacker, EntityItem weapon, EntityObjectLiving living, int damage) {
-		this.attacker = attacker;
-		this.weapon = weapon;
-		this.living = living;
-		this.damage = damage;
+	@Override
+	public String getName() {
+		return "Physical";
 	}
 
 	@Override
-	public void setCanceled(boolean cancel) {
-		this.isCanceled = cancel;
+	public void onAttacked(EntityObjectLiving target, IAttacker attacker, EntityItem item) {
+		
 	}
+	
+	private static IDamageType inst = new DamageTypePhysical();
 
-	@Override
-	public boolean isCanceled() {
-		return this.isCanceled;
+	public static IDamageType instance() {
+		if (inst == null) inst = new DamageTypePhysical();
+		return inst;
 	}
 
 }

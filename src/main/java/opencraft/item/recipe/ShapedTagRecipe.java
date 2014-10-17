@@ -49,11 +49,11 @@ public class ShapedTagRecipe implements IRecipe {
 		}
 	}
 
-	@SuppressWarnings("unused")
 	@Override
 	public boolean match(EntityItem[][] grid) {
 		if (this.grid.length > grid.length || this.grid[0].length > grid[0].length) return false;
 		for (int r=this.grid.length; r<=grid.length; r++) {
+			point:
 			for (int c=this.grid[0].length; c<=grid[r].length;++c) {
 				EntityItem[][] subgrid = new EntityItem[this.grid.length][this.grid[0].length];
 				for (int p=0; p<this.grid.length; p++) {
@@ -61,13 +61,12 @@ public class ShapedTagRecipe implements IRecipe {
 						subgrid[p][q] = grid[r - this.grid.length + p][c - this.grid[0].length + q];
 					}
 				}
-				bp:
 				for (int i=0; i<subgrid.length; i++) {
 					for (int j=0; j<subgrid[i].length; j++) {
 						if (subgrid[i][j] == null) {
-							if (this.grid[i][j] != null) break bp;
+							if (this.grid[i][j] != null) continue point;
 						} else if (!subgrid[i][j].getTags().contains(this.grid[i][j])) {
-							break bp;
+							continue point;
 						}
 					}
 				}
@@ -78,7 +77,17 @@ public class ShapedTagRecipe implements IRecipe {
 	}
 
 	@Override
-	public EntityItem result() {
+	public EntityItem result(EntityItem[][] grid) {
+		for (EntityItem[] row : grid) {
+			for (EntityItem elem : row) {
+				if (elem != null) {
+					elem.take(1);
+					if (elem.amount <= 0) {
+						elem = null;
+					}
+				}
+			}
+		}
 		return this.result;
 	}
 }

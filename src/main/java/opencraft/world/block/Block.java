@@ -29,24 +29,58 @@
 
 package opencraft.world.block;
 
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
+
+import opencraft.event.object.living.EventOnAttacked;
 import opencraft.lib.CubeDirection;
 import opencraft.lib.entity.data.Box;
+import opencraft.lib.entity.data.IntXYZ;
 import opencraft.world.EntityWorld;
+import opencraft.world.object.EntityObject;
+import opencraft.world.object.collision.SuffocateDamage;
+import opencraft.world.object.living.EntityObjectLiving;
 
 public abstract class Block implements IBlock {
 	
 	public static BlockRegistry registry = new BlockRegistry();
 	
-	public IBlock onChunkTick(EntityWorld world, int x, int y, int z) {
+	private List<Box> listAABB = new LinkedList<>();
+	
+	public Block() {
+		if (isFullCube()) this.addAABB(new Box(0, 0, 0, 1, 1, 1));
+	}
+	
+	protected boolean isFullCube() {
+		return false;
+	}
+	
+	protected boolean isSolid() {
+		return true;
+	}
+	
+	public IBlock onChunkTick(EntityWorld world, IntXYZ coord) {
 		return this;
 	}
 	
-	public void onNeighborChanged(EntityWorld world, int x, int y, int z, CubeDirection side) {
+	public void onNeighborChanged(EntityWorld world, IntXYZ coord, CubeDirection side) {
 		
 	}
 	
-	public Box getAABB() {
-		return new Box(0, 0, 0, 1, 1, 1);
+	public void onObjectCollide(EntityWorld world, IntXYZ coord, EntityObject object) {
+		if (object instanceof EntityObjectLiving && isSolid()) {
+			EntityObjectLiving living = (EntityObjectLiving) object;
+			living.event().emit(new EventOnAttacked(SuffocateDamage.instance(), null, living, SuffocateDamage.instance().getAttackDamage(living, null)));
+		}
+	}
+	
+	public Collection<Box> getAABB() {
+		return this.listAABB;
+	}
+	
+	protected void addAABB(Box box) {
+		this.listAABB.add(box);
 	}
 	
 	public boolean isAir() {

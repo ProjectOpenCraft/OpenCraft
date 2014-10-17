@@ -36,7 +36,7 @@ import java.util.Set;
 
 import opencraft.lib.INamed;
 import opencraft.lib.entity.Entity;
-import opencraft.world.object.living.DamageTypeFist;
+import opencraft.world.object.living.DamageTypePhysical;
 import opencraft.world.object.living.IDamageType;
 
 public abstract class EntityItem extends Entity implements INamed {
@@ -56,7 +56,7 @@ public abstract class EntityItem extends Entity implements INamed {
 	}
 	
 	public IDamageType getDamageType() {
-		return new DamageTypeFist();
+		return DamageTypePhysical.instance();
 	}
 	
 	public EntityItem take(int num) {
